@@ -1,7 +1,13 @@
-import "./App.css";
+import { PageRoutes } from "./@types/enum";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/home/Home";
 
 function App() {
-  return <></>;
+  return (
+    <Routes>
+      <Route path={PageRoutes.HOME} Component={Home} />
+    </Routes>
+  );
 }
 
 export default App;
