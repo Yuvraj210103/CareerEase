@@ -1,3 +1,4 @@
+import AboutUs from "../../component/home/AboutUs";
 import FeaturesSection from "../../component/home/FeaturesSection";
 import TopSection from "../../component/home/TopSection";
 
@@ -7,6 +8,7 @@ const Home = () => {
       <div className="flex flex-col w-full h-full py-10 max-w-[1280px]">
         <TopSection />
         <FeaturesSection />
+        <AboutUs />
       </div>
     </div>
   );
