@@ -1,5 +1,6 @@
 import AboutUs from "../../component/home/AboutUs";
 import FeaturesSection from "../../component/home/FeaturesSection";
+import OurCommunity from "../../component/home/OurCommunity";
 import TopSection from "../../component/home/TopSection";
 
 const Home = () => {
@@ -9,6 +10,7 @@ const Home = () => {
         <TopSection />
         <FeaturesSection />
         <AboutUs />
+        <OurCommunity />
       </div>
     </div>
   );

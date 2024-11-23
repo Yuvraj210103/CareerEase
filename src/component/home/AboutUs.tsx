@@ -2,7 +2,7 @@ import { VscDebugBreakpointLog } from "react-icons/vsc";
 
 const AboutUs = () => {
   return (
-    <div className="mt-8 flex flex-col items-center justify-center gap-8 px-8">
+    <div className="mt-12 flex flex-col items-center justify-center gap-8 px-8">
       <div className="font-bold text-3xl">About Us</div>
       <div className="flex items-center justify-between gap-8">
         {/* Left Section */}
