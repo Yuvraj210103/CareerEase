@@ -9,8 +9,8 @@ const Nav = () => {
     setMobileNav(!mobileNav);
   };
   return (
-    <div className="flex items-center justify-center w-full h-full bg-surface shadow-lg border-b-[2px] border-inputBorder z-[2]">
-      <div className="z-[2] flex items-center w-full px-4 md:px-8 py-4 justify-between max-w-[1280px] gap-4">
+    <div className="flex items-center justify-center w-full bg-surface shadow-lg border-b-[2px] border-inputBorder z-[10] fixed inset-x-0 top-0">
+      <div className="flex items-center w-full px-4 md:px-8 py-4 justify-between max-w-[1280px] gap-4">
         <div className="flex items-center gap-4">
           {!mobileNav ? (
             <MdOutlineMenu
@@ -58,7 +58,7 @@ const Nav = () => {
       <div
         className={`${
           !mobileNav ? " fixed top-[-300px]" : "fixed top-0 "
-        }   z-[0]  mt-20 w-full  overflow-x-hidden bg-surface shadow-md duration-500 md:hidden`}
+        }   z-[0]  mt-16 w-full  overflow-x-hidden bg-surface shadow-md duration-500 md:hidden`}
       >
         <div
           onClick={mobileMenu}
