@@ -2,7 +2,7 @@ import { ConstSocialMediaLinks } from "../constants/ConstSocialMediaLinks";
 
 const OurCommunity = () => {
   return (
-    <div className="mt-12 flex flex-col items-center justify-center gap-8 px-8">
+    <div className="mt-12 flex flex-col items-center justify-center gap-8 px-8 bg-surface py-8">
       <div className="flex flex-col items-center justify-center gap-1">
         <div className="font-bold text-3xl">Welcome to Our Community</div>
         <div className="text-center font-medium text-lg text-textSecondary">
