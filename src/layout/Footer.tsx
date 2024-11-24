@@ -10,10 +10,18 @@ const Footer = () => {
           <div className="flex w-full flex-col items-center justify-between lg:flex-row">
             <div className="flex w-full flex-col items-center justify-center lg:items-start">
               <div className="flex items-center">
-                <img src="/logo.png" alt="" className="h-[60px] w-[75px]" />
+                <img
+                  src="/logo.png"
+                  alt=""
+                  className="md:h-[60px] md:w-[75px] h-[45px] w-[60px]"
+                />
                 <div className="flex flex-col">
-                  <div className="font-bold text-3xl">CareerEase</div>
-                  <div className="text-sm">Navigate Your Career with Ease</div>
+                  <div className="font-bold text-2xl md:text-3xl">
+                    CareerEase
+                  </div>
+                  <div className="text-xs md:text-sm">
+                    Navigate Your Career with Ease
+                  </div>
                 </div>
               </div>
 
