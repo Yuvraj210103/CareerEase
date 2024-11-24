@@ -2,6 +2,7 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../component/common/button/Button";
 import { useState } from "react";
 import { MdLogin, MdOutlineMenu } from "react-icons/md";
+import { Link } from "react-scroll";
 
 const Nav = () => {
   const [mobileNav, setMobileNav] = useState(false);
@@ -36,13 +37,19 @@ const Nav = () => {
               <div className="font-bold text-xl">CareerEase</div>
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <div className="text-lg font-semibold cursor-pointer">Home</div>
-              <div className="text-lg font-semibold cursor-pointer">
-                About Us
-              </div>
-              <div className="text-lg font-semibold cursor-pointer">
-                Contact
-              </div>
+              <Link to="home" smooth={true} duration={500}>
+                <div className="text-lg font-semibold cursor-pointer">Home</div>
+              </Link>
+              <Link to="about" smooth={true} duration={500}>
+                <div className="text-lg font-semibold cursor-pointer">
+                  About Us
+                </div>
+              </Link>
+              <Link to="contact" smooth={true} duration={500}>
+                <div className="text-lg font-semibold cursor-pointer">
+                  Contact
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -60,26 +67,32 @@ const Nav = () => {
           !mobileNav ? " fixed top-[-300px]" : "fixed top-0 "
         }   z-[0]  mt-16 w-full  overflow-x-hidden bg-surface shadow-md duration-500 md:hidden`}
       >
-        <div
-          onClick={mobileMenu}
-          className="mx-5 my-4  cursor-pointer list-none text-xl  font-semibold  lg:hover:underline"
-        >
-          Home
-        </div>
+        <Link to="home" smooth={true} duration={500}>
+          <div
+            onClick={mobileMenu}
+            className="mx-5 my-4  cursor-pointer list-none text-xl  font-semibold  lg:hover:underline"
+          >
+            Home
+          </div>
+        </Link>
 
-        <div
-          onClick={mobileMenu}
-          className="mx-5 my-4  cursor-pointer list-none text-xl font-semibold   lg:hover:underline"
-        >
-          About Us
-        </div>
+        <Link to="about" smooth={true} duration={500}>
+          <div
+            onClick={mobileMenu}
+            className="mx-5 my-4  cursor-pointer list-none text-xl font-semibold   lg:hover:underline"
+          >
+            About Us
+          </div>
+        </Link>
 
-        <div
-          onClick={mobileMenu}
-          className="mx-5 my-4  cursor-pointer list-none text-xl  font-semibold  lg:hover:underline"
-        >
-          Contact
-        </div>
+        <Link to="contact" smooth={true} duration={500}>
+          <div
+            onClick={mobileMenu}
+            className="mx-5 my-4  cursor-pointer list-none text-xl  font-semibold  lg:hover:underline"
+          >
+            Contact
+          </div>
+        </Link>
       </div>
     </div>
   );

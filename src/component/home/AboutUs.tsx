@@ -2,7 +2,7 @@ import { VscDebugBreakpointLog } from "react-icons/vsc";
 
 const AboutUs = () => {
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div id="about" className="flex items-center justify-center w-full h-full">
       <div className="mt-12 flex flex-col items-center justify-center gap-8 md:px-8 px-4 max-w-[1280px] pb-10">
         <div className="font-bold text-2xl md:text-3xl">About Us</div>
         <div className="flex md:flex-row flex-col items-center justify-between md:gap-8 gap-10">
