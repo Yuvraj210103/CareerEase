@@ -53,6 +53,7 @@ export default {
 
         shimmerColor: "#e3e3e3",
         inputBorder: "#0000001A",
+        footerBg: "#383838",
       },
       animation: {
         fadeIn: "fadeIn 1s ease-in-out",
