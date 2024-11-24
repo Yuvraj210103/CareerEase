@@ -13,18 +13,16 @@ const Footer = () => {
                 <img src="/logo.png" alt="" className="h-[60px] w-[75px]" />
                 <div className="flex flex-col">
                   <div className="font-bold text-3xl">CareerEase</div>
-                  <div className=" text-textSecondary text-sm">
-                    Navigate Your Career with Ease
-                  </div>
+                  <div className="text-sm">Navigate Your Career with Ease</div>
                 </div>
               </div>
 
-              <h3 className="text-sm">
+              <h3 className="text-sm mt-2 ml-3">
                 <a href={`mailto:${ConstContactDetails.EMAIL}`}>
                   {ConstContactDetails.EMAIL}
                 </a>
               </h3>
-              <h3 className="text-sm">
+              <h3 className="text-sm ml-3">
                 <a href={`tel:${ConstContactDetails.PHONE_NUMBER}`}>
                   {`${ConstContactDetails.PHONE_NUMBER.slice(
                     0,
@@ -34,16 +32,17 @@ const Footer = () => {
               </h3>
             </div>
             <div className=" grid  w-full grid-cols-2 text-center  text-sm lg:text-end lg:text-base">
-              <div>
-                <div className="my-5 list-none">Home</div>
+              <div className="md:text-lg">
+                <div className="my-5 ">Home</div>
 
-                <div className="my-5 list-none">About Us</div>
+                <div className="my-5 ">About Us</div>
 
-                <div className="my-5 list-none">Contact Us</div>
+                <div className="my-5 ">Contact Us</div>
               </div>
-              <div className="">
-                <div className="my-5 list-none">Privacy Policy</div>
-                <div className="my-5 list-none">Terms & Conditions</div>
+              <div className="md:text-lg">
+                <div className="my-5 ">Privacy Policy</div>
+                <div className="my-5 ">Terms & Conditions</div>
+                <div className="my-5 ">Help & FAQ</div>
               </div>
             </div>
           </div>
