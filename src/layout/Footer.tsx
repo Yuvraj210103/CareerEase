@@ -1,48 +1,61 @@
+import { ConstContactDetails } from "../component/constants/ConstContactDetails";
+
 const Footer = () => {
   return (
-    <footer className="flex w-full flex-col items-center ">
-      <div className="flex w-full  flex-col items-center bg-gray-200 px-4 lg:px-36 pt-10 gap-6">
-        <div className="flex items-start justify-between w-full">
-          <div className="flex flex-col ">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="" className="h-[60px] w-[75px]" />
-              <div className="flex flex-col">
-                <div className="font-bold text-3xl">CareerEase</div>
-                <div className=" text-textSecondary text-sm">
-                  Navigate Your Career with Ease
+    <div className="flex w-full flex-col items-center text-surface">
+      <div
+        className={`flex w-full  flex-col items-center bg-footerBg px-4 lg:px-36`}
+      >
+        <div className="flex w-full max-w-[1280px] flex-col py-8 ">
+          <div className="flex w-full flex-col items-center justify-between lg:flex-row">
+            <div className="flex w-full flex-col items-center justify-center lg:items-start">
+              <div className="flex items-center">
+                <img src="/logo.png" alt="" className="h-[60px] w-[75px]" />
+                <div className="flex flex-col">
+                  <div className="font-bold text-3xl">CareerEase</div>
+                  <div className="text-sm">Navigate Your Career with Ease</div>
                 </div>
               </div>
-            </div>
 
-            <div className="ml-3 text-textSecondary text-sm mt-2">
-              yuvrajssingh03@gmail.com
+              <h3 className="text-sm mt-2 ml-3">
+                <a href={`mailto:${ConstContactDetails.EMAIL}`}>
+                  {ConstContactDetails.EMAIL}
+                </a>
+              </h3>
+              <h3 className="text-sm ml-3">
+                <a href={`tel:${ConstContactDetails.PHONE_NUMBER}`}>
+                  {`${ConstContactDetails.PHONE_NUMBER.slice(
+                    0,
+                    3
+                  )} ${ConstContactDetails.PHONE_NUMBER.slice(3)}`}
+                </a>
+              </h3>
             </div>
-            <div className="ml-3 text-textSecondary text-sm">
-              +91 8624016814
+            <div className=" grid  w-full grid-cols-2 text-center  text-sm lg:text-end lg:text-base">
+              <div className="md:text-lg">
+                <div className="my-5 ">Home</div>
+
+                <div className="my-5 ">About Us</div>
+
+                <div className="my-5 ">Contact Us</div>
+              </div>
+              <div className="md:text-lg">
+                <div className="my-5 ">Privacy Policy</div>
+                <div className="my-5 ">Terms & Conditions</div>
+                <div className="my-5 ">Help & FAQ</div>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col justify-between">
-            <span className="font-bold">Quick Access</span>
-            <span className="mt-2 font-medium">Home</span>
-            <span className="font-medium">About Us</span>
-            <span className="font-medium">Contact</span>
-          </div>
-          <div className="flex flex-col justify-between">
-            <span className="font-bold">Legal</span>
-            <span className="mt-2 font-medium">Privacy Policy</span>
-            <span className="font-medium">Terms and Condition</span>
-            <span className="font-medium">&nbsp;</span>
           </div>
         </div>
-
+      </div>
+      <div className="flex w-full  flex-col items-center bg-secondary px-4 lg:px-36">
         <div className="flex w-full max-w-[1280px] flex-col py-4">
-          <h2 className="text-center text-sm">
-            Copyright &copy;{new Date().getFullYear()} CareerEase | All rights
-            reserved.
+          <h2 className="text-center text-xs">
+            &copy;{new Date().getFullYear()} CareerEase. All rights reserved.
           </h2>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
