@@ -1,7 +1,7 @@
 import { RxCross2 } from "react-icons/rx";
 import Button from "../component/common/button/Button";
 import { useState } from "react";
-import { MdOutlineMenu } from "react-icons/md";
+import { MdLogin, MdOutlineMenu } from "react-icons/md";
 
 const Nav = () => {
   const [mobileNav, setMobileNav] = useState(false);
@@ -10,7 +10,7 @@ const Nav = () => {
   };
   return (
     <div className="flex items-center justify-center w-full h-full bg-surface shadow-lg border-b-[2px] border-inputBorder z-[2]">
-      <div className="z-[2] flex items-center w-full px-8 py-4 justify-between max-w-[1280px]">
+      <div className="z-[2] flex items-center w-full px-4 md:px-8 py-4 justify-between max-w-[1280px] gap-4">
         <div className="flex items-center gap-4">
           {!mobileNav ? (
             <MdOutlineMenu
@@ -28,7 +28,11 @@ const Nav = () => {
               onClick={() => window.location.reload()}
               className="flex items-center cursor-pointer"
             >
-              <img src="/logo.png" alt="" className="h-[50px] w-[65px]" />
+              <img
+                src="/logo.png"
+                alt=""
+                className="md:h-[50px] md:w-[65px] h-[40px] w-[50px]"
+              />
               <div className="font-bold text-xl">CareerEase</div>
             </div>
             <div className="hidden md:flex items-center gap-8">
@@ -43,7 +47,13 @@ const Nav = () => {
           </div>
         </div>
 
-        <Button label="Login/Signup" onClick={() => {}} type="purple" />
+        <Button
+          label="Login/Signup"
+          onClick={() => {}}
+          type="purple"
+          className="hidden md:flex"
+        />
+        <MdLogin className="md:hidden text-2xl cursor-pointer" />
       </div>
       <div
         className={`${
