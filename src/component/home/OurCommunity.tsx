@@ -2,7 +2,10 @@ import { ConstSocialMediaLinks } from "../constants/ConstSocialMediaLinks";
 
 const OurCommunity = () => {
   return (
-    <div className="flex items-center justify-center w-full h-full bg-surface">
+    <div
+      id="contact"
+      className="flex items-center justify-center w-full h-full bg-surface"
+    >
       <div className="mt-12 flex flex-col items-center justify-center gap-8 md:px-8 px-4 max-w-[1280px] pb-10">
         <div className="flex flex-col items-center justify-center gap-1">
           <div className="font-bold text-2xl md:text-3xl">
