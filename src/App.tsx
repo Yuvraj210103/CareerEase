@@ -10,6 +10,9 @@ import { ModalsProvider } from "@mantine/modals";
 import LoaderModal from "./component/common/modals/LoaderModal";
 import { ContextConfirmModal } from "./component/common/modals/ContextConfirmModal";
 import { ToastContainer } from "react-toastify";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "react-toastify/dist/ReactToastify.min.css";
 
 function App() {
   return (
@@ -23,7 +26,7 @@ function App() {
             <Route path={PageRoutes.HOME} Component={Home} />
             <Route path={PageRoutes.ABOUT} Component={About} />
             <Route path={PageRoutes.LOGIN} Component={Login} />
-            <Route path={PageRoutes.LOGIN} Component={Signup} />
+            <Route path={PageRoutes.SIGNUP} Component={Signup} />
           </Routes>
         </Layout>
       </ModalsProvider>

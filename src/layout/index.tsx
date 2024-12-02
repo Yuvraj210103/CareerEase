@@ -10,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex flex-col w-full h-full">
       <Nav />
-      <div className="min-h-[calc(100vh-4rem)] w-full bg-background">
+      <div className="min-h-[calc(100vh-4rem)] w-full bg-background mt-16">
         {children}
       </div>
       <Footer />

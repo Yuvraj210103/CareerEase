@@ -1,3 +1,8 @@
+export enum CollectionName {
+  authUsers = "AuthUsers",
+  loggedInUsers = "LoggedInUsers",
+}
+
 export const PageRoutes = {
   HOME: "/",
   ABOUT: "/about",
@@ -8,3 +13,9 @@ export const PageRoutes = {
 export const LocalStorageKey = {
   LOGGEDIN_USER: "loggedInUser",
 };
+
+export interface LocalStorageLoggedInUserData {
+  LoggedInId: string;
+  LoggedInUserId: string;
+  LoggedInAuthUserType: "user" | "admin";
+}
