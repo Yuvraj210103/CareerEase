@@ -1,9 +1,14 @@
 import {
+  collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  limit,
+  query,
   serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { CollectionName } from "../../@types/enum";
 import { db } from "../config";
@@ -40,6 +45,24 @@ class DbUser {
   static deleteUserLoggedInDoc = async (loggedInId: string) => {
     const loggedInRef = doc(db, CollectionName.loggedInUsers, loggedInId);
     return deleteDoc(loggedInRef);
+  };
+
+  static getUserLoggedInData = async (
+    uId: string,
+    loggedInId: string,
+    isLoggedIn: boolean
+  ) => {
+    const loggedInRef = collection(db, CollectionName.loggedInUsers);
+
+    const loggedInQuery = query(
+      loggedInRef,
+      where("LoggedInId", "==", loggedInId),
+      where("LoggedInUserId", "==", uId),
+      where("IsLoggedIn", "==", isLoggedIn),
+      limit(1)
+    );
+
+    return getDocs(loggedInQuery);
   };
 }
 

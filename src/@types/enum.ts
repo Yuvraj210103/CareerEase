@@ -8,6 +8,7 @@ export const PageRoutes = {
   ABOUT: "/about",
   LOGIN: "/login",
   SIGNUP: "/signup",
+  USER_HOME: "/user/home",
 };
 
 export const LocalStorageKey = {

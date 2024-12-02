@@ -13,8 +13,11 @@ import { ToastContainer } from "react-toastify";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
+import useOnAuthStateChanged from "./hooks/useOnAuthStateChanged";
 
 function App() {
+  useOnAuthStateChanged();
+
   return (
     <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
       <ModalsProvider
