@@ -54,6 +54,11 @@ export default {
         shimmerColor: "#e3e3e3",
         inputBorder: "#0000001A",
         footerBg: "#383838",
+        sidebarBg: "#242526",
+        layoutHeaderBg: "#000000",
+
+        sidebarMenuBg: "#29303C",
+        sidebarMenuHoverBg: "#ffffff18",
       },
       animation: {
         fadeIn: "fadeIn 1s ease-in-out",

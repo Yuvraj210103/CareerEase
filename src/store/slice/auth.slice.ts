@@ -9,7 +9,7 @@ import DbUser from "../../firebase/DB/DbUser";
 
 interface AuthState {
   user: IAuthUsersCollection | null;
-  setUser: (admin: IAuthUsersCollection | null) => void;
+  setUser: (user: IAuthUsersCollection | null) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   userSignOut: () => void;
@@ -17,7 +17,7 @@ interface AuthState {
 
 export const createAuthSlice: StateCreator<AuthState> = (set) => ({
   user: null,
-  setUser: (admin) => set((state) => ({ ...state, admin })),
+  setUser: (user) => set((state) => ({ ...state, user })),
   loading: true,
   setLoading: (loading) => set((state) => ({ ...state, loading })),
   // For logging out user
@@ -29,10 +29,10 @@ export const createAuthSlice: StateCreator<AuthState> = (set) => ({
     if (loggedInUser) {
       set((state) => ({
         ...state,
-        admin: null,
+        user: null,
         company: null,
         client: null,
-        superAdmin: null,
+        superuser: null,
       }));
       DbUser.deleteUserLoggedInDoc(loggedInUser.LoggedInId)
         .then(() => {

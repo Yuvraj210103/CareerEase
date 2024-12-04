@@ -1,9 +1,9 @@
 import { RxCross2 } from "react-icons/rx";
-import Button from "../component/common/button/Button";
 import { useState } from "react";
 import { MdLogin, MdOutlineMenu } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import { PageRoutes } from "../@types/enum";
+import { PageRoutes } from "../../@types/enum";
+import Button from "../../component/common/button/Button";
 
 const Nav = () => {
   const [mobileNav, setMobileNav] = useState(false);
