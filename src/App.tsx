@@ -16,7 +16,7 @@ import useOnAuthStateChanged from "./hooks/useOnAuthStateChanged";
 import Layout from "./layout/landing_page";
 import { useAuthState } from "./store";
 import SplashScreen from "./component/splash_screen/SplashScreen";
-import UserPageLayout from "./layout/user_page/UserPageLayout";
+import UserPageLayout from "./layout/user_page";
 import UserHome from "./pages/user/home/Home";
 import Home from "./pages/home/Home";
 
