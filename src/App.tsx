@@ -1,7 +1,6 @@
 import { PageRoutes } from "./@types/enum";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/home/Home";
-import Layout from "./layout";
+
 import About from "./pages/about/About";
 import Login from "./pages/login_signup/Login";
 import Signup from "./pages/login_signup/Signup";
@@ -14,9 +13,40 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import useOnAuthStateChanged from "./hooks/useOnAuthStateChanged";
+import Layout from "./layout/landing_page";
+import { useAuthState } from "./store";
+import SplashScreen from "./component/splash_screen/SplashScreen";
+import UserPageLayout from "./layout/user_page/UserPageLayout";
+import UserHome from "./pages/user/home/Home";
+import Home from "./pages/home/Home";
 
 function App() {
+  const { user, loading } = useAuthState();
+
   useOnAuthStateChanged();
+
+  if (loading) {
+    return <SplashScreen />;
+  }
+
+  console.log(user, "here");
+
+  if (user) {
+    return (
+      <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
+        <ModalsProvider
+          modals={{ loader: LoaderModal, confirmModal: ContextConfirmModal }}
+        >
+          <UserPageLayout>
+            <ToastContainer />
+            <Routes>
+              <Route path={PageRoutes.USER_HOME} Component={UserHome} />
+            </Routes>
+          </UserPageLayout>
+        </ModalsProvider>
+      </MantineProvider>
+    );
+  }
 
   return (
     <MantineProvider withGlobalClasses withCssVariables withStaticClasses>

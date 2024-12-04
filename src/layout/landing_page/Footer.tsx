@@ -1,4 +1,4 @@
-import { ConstContactDetails } from "../component/constants/ConstContactDetails";
+import { ConstContactDetails } from "../../component/constants/ConstContactDetails";
 
 const Footer = () => {
   return (
