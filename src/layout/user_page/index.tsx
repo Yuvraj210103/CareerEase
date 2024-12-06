@@ -22,7 +22,7 @@ const UserPageLayout = ({ children }: UserPageLayoutProps) => {
   const { userSignOut } = useAuthState();
   return (
     <AppShell
-      header={{ height: 85 }}
+      header={{ height: 60 }}
       navbar={{
         width: 300,
         breakpoint: "sm",
@@ -46,9 +46,9 @@ const UserPageLayout = ({ children }: UserPageLayoutProps) => {
               <img
                 src="/logo.png"
                 alt=""
-                className="md:h-[50px] md:w-[65px] h-[40px] w-[50px]"
+                className="md:h-[40px] md:w-[50px] h-[40px] w-[50px]"
               />
-              <div className="font-bold text-xl">CareerEase</div>
+              <div className="font-bold text-lg">CareerEase</div>
             </div>
           </div>
           <div
