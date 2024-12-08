@@ -1,6 +1,7 @@
 export enum CollectionName {
   authUsers = "AuthUsers",
   loggedInUsers = "LoggedInUsers",
+  userProfiles = "UserProfiles",
 }
 
 export const PageRoutes = {
