@@ -174,7 +174,6 @@ class DbUser {
 
   static updateUserProfile = (
     data: UserProfileCreateFormFields,
-    userId: string,
     userProfileId: string
   ) => {
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
