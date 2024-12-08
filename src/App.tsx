@@ -19,6 +19,7 @@ import SplashScreen from "./component/splash_screen/SplashScreen";
 import UserPageLayout from "./layout/user_page";
 import UserHome from "./pages/user/home/Home";
 import Home from "./pages/home/Home";
+import Profile from "./pages/user/profile/Profile";
 
 function App() {
   const { user, loading } = useAuthState();
@@ -41,6 +42,7 @@ function App() {
             <ToastContainer />
             <Routes>
               <Route path={PageRoutes.USER_HOME} Component={UserHome} />
+              <Route path={PageRoutes.USER_PROFILE} Component={Profile} />
             </Routes>
           </UserPageLayout>
         </ModalsProvider>

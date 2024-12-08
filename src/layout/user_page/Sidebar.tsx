@@ -13,7 +13,7 @@ const Sidebar = () => {
         <MenuItem
           name="Profile"
           icon={<MdOutlinePersonOutline className="h-6 w-6 " />}
-          path={PageRoutes.USER_HOME}
+          path={PageRoutes.USER_PROFILE}
         />
         <MenuItem
           name="Resume Templates"
