@@ -21,9 +21,9 @@ const MenuItem: FC<ItemProps> = ({ name, icon, path }) => {
       onClick={handleClick}
       className={`mx-4 px-4 py-3 ${
         path === currentLocation
-          ? "bg-sidebarMenuHoverBg"
+          ? "bg-sidebarMenuBg"
           : "hover:bg-sidebarMenuHoverBg"
-      } bg-sidebarMenuBg text-surface rounded flex justify-between items-center cursor-pointer`}
+      }  text-surface rounded flex justify-between items-center cursor-pointer`}
     >
       <div>{icon}</div>
       <div className="h-full  text-lg w-full pl-5 line-clamp-1">{name}</div>
