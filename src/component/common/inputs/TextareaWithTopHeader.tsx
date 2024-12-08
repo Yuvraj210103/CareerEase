@@ -1,12 +1,12 @@
-import { Path, UseFormRegister } from 'react-hook-form';
+import { Path, UseFormRegister } from "react-hook-form";
 
-import InputError from './InputError';
-import InputHeader from './InputHeader';
+import InputError from "./InputError";
+import InputHeader from "./InputHeader";
 
 interface TextareaWithTopHeaderProps<
-  FormFields extends Record<string, unknown>,
+  FormFields extends Record<string, unknown>
 > {
-  title?: string;
+  label?: string;
   placeholder?: string;
   className?: string;
   leadingIcon?: JSX.Element;
@@ -23,9 +23,9 @@ interface TextareaWithTopHeaderProps<
 }
 
 const TextareaWithTopHeader = <FormFields extends Record<string, unknown>>({
-  title,
+  label,
   placeholder,
-  className = 'mx-4',
+  className = "mx-4",
   fontClassName,
   leadingIcon,
   tailIcon,
@@ -40,9 +40,9 @@ const TextareaWithTopHeader = <FormFields extends Record<string, unknown>>({
 }: TextareaWithTopHeaderProps<FormFields>) => {
   return (
     <div className={`gap-1 flex flex-col ${className}`}>
-      {title ? (
+      {label ? (
         <InputHeader
-          title={title}
+          title={label}
           className="w-full"
           fontClassName={fontClassName}
         />
@@ -50,7 +50,7 @@ const TextareaWithTopHeader = <FormFields extends Record<string, unknown>>({
 
       <div
         className={`flex justify-center items-center border ${
-          error ? 'border-textPrimaryRed' : 'border-inputBorder'
+          error ? "border-textPrimaryRed" : "border-inputBorder"
         } bg-surfaceLight w-full rounded  focus-within:ring-[2px]`}
       >
         {leadingIcon ? (
@@ -70,7 +70,7 @@ const TextareaWithTopHeader = <FormFields extends Record<string, unknown>>({
             }}
             className="w-full text-lg py-1 pl-2 pr-0 outline-none "
             placeholder={placeholder}
-            style={{ resize: 'none' }}
+            style={{ resize: "none" }}
             rows={4}
             disabled={disabled}
           />
@@ -87,7 +87,7 @@ const TextareaWithTopHeader = <FormFields extends Record<string, unknown>>({
             onChange={onChange}
             className="w-full text-lg py-1 pl-2 pr-0 outline-none "
             placeholder={placeholder}
-            style={{ resize: 'none' }}
+            style={{ resize: "none" }}
             rows={4}
             disabled={disabled}
           />
