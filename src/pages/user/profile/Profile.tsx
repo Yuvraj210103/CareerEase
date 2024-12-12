@@ -1,39 +1,35 @@
-import { useEffect } from "react";
-import { useUIState } from "../../../store";
-import InputWithTopHeader from "../../../component/common/inputs/InputWithTopHeader";
-import TextareaWithTopHeader from "../../../component/common/inputs/TextareaWithTopHeader";
 import PageHeader from "../../../component/common/PageHeader";
+import PersonalDetails from "../../../component/user/profile/PersonalDetails";
+import { FormProvider, useForm } from "react-hook-form";
+import {
+  UserProfileCreateFormFields,
+  userProfileCreateSchema,
+} from "../../../utilities/zod/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Footer from "../../../layout/user_page/Footer";
 
 const Profile = () => {
-  const { setShowFooter } = useUIState();
+  const methods = useForm<UserProfileCreateFormFields>({
+    resolver: zodResolver(userProfileCreateSchema),
+  });
 
-  useEffect(() => {
-    setShowFooter(true);
+  const onSubmit = async (data: UserProfileCreateFormFields) => {
+    console.log(data);
+  };
 
-    return () => {
-      setShowFooter(false);
-    };
-  }, []);
+  //console errors
+  console.log(methods.formState.errors.UserProfilePersonalDetails);
 
   return (
-    <div className="flex flex-col gap-4">
-      <PageHeader title="Profile" />
-      <div className="flex flex-col gap-4 bg-surface p-4 shadow-md rounded">
-        <div className="font-semibold flex items-center gap-2 text-lg">
-          Personal Details
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-4">
+          <PageHeader title="Profile" />
+          <PersonalDetails />
         </div>
-        <div className="grid grid-cols-3 gap-4 mt-2">
-          <InputWithTopHeader className="mx-0" label="Full Name" />
-          <InputWithTopHeader className="mx-0" label="Email" />
-          <InputWithTopHeader className="mx-0" label="Phone" />
-
-          <InputWithTopHeader className="mx-0" label="LinkedIn" />
-          <InputWithTopHeader className="mx-0" label="GitHub" />
-          <InputWithTopHeader className="mx-0" label="Website" />
-          <TextareaWithTopHeader className="mx-0" label="Address" />
-        </div>
-      </div>
-    </div>
+        <Footer />
+      </form>
+    </FormProvider>
   );
 };
 

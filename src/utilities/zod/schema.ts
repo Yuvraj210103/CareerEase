@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 const userProfilePersonalDetails = z.object({
-  UserFullName: z.string(),
-  UserEmail: z.string(),
-  UserPhone: z.string(),
+  UserFullName: z.string().min(3),
+  UserEmail: z.string().min(6),
+  UserPhone: z.string().min(10),
   UserAddress: z.string().nullable(),
   UserLinkedIn: z.string().nullable(),
   UserGitHub: z.string().nullable(),

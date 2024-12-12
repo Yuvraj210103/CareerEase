@@ -2,8 +2,6 @@ import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Footer from "./Footer";
-import { useUIState } from "../../store";
 
 interface UserPageLayoutProps {
   children: React.ReactNode;
@@ -11,8 +9,6 @@ interface UserPageLayoutProps {
 
 const UserPageLayout = ({ children }: UserPageLayoutProps) => {
   const [opened, { toggle }] = useDisclosure();
-
-  const { showFooter } = useUIState();
 
   return (
     <AppShell
@@ -30,8 +26,6 @@ const UserPageLayout = ({ children }: UserPageLayoutProps) => {
       <AppShell.Main bg={"#f7f7f7"}>
         <div className="flex flex-col w-full h-full pl-4 py-4">{children}</div>
       </AppShell.Main>
-
-      {showFooter && <Footer />}
     </AppShell>
   );
 };
