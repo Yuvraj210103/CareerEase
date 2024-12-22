@@ -35,7 +35,7 @@ export interface IUserProfileEducationDetailsChildCollection {
   UserEducationInstitution: string;
   UserEducationStartDate: Timestamp | FieldValue;
   UserEducationEndDate: Timestamp | FieldValue;
-  UserEducationGrade: string;
+  UserEducationGrade: string | null;
   UserEducationDescription: string | null;
 }
 
@@ -46,6 +46,11 @@ export interface IUserProfileWorkExperienceChildCollection {
   UserWorkExpEndDate?: Timestamp | FieldValue | null;
   UserWorkExpResponsibilities: string[];
   UserWorkExpAchievements: string[];
+}
+
+export interface IUserProfileSkillsChildCollection {
+  UserSkillName: string;
+  UserSkillProficiency: number; //* 1 to 5
 }
 
 export interface IUserProfileProjectsDetails {
@@ -76,7 +81,7 @@ export interface IUserProfilesCollection {
   UserProfilePersonalDetails: IUserProfilePersonalDetails;
   UserProfileEducationDetails: IUserProfileEducationDetailsChildCollection[];
   UserProfileWorkExperience: IUserProfileWorkExperienceChildCollection[];
-  UserProfileSkills: string[];
+  UserProfileSkills: IUserProfileSkillsChildCollection[];
   UserProfileProjects: IUserProfileProjectsDetails[];
   UserProfileCertifications: IUserProfileCertificationsDetails[];
   UserProfileLanguages: string[];
