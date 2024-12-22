@@ -7,6 +7,11 @@ import {
 } from "../../../utilities/zod/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Footer from "../../../layout/user_page/Footer";
+import EducationDetails from "../../../component/user/profile/EducationDetails";
+import WorkExperience from "../../../component/user/profile/WorkExperience";
+import ProjectDetails from "../../../component/user/profile/ProjectDetails";
+import Certifications from "../../../component/user/profile/Certifications";
+import CustomDetails from "../../../component/user/profile/CustomDetails";
 
 const Profile = () => {
   const methods = useForm<UserProfileCreateFormFields>({
@@ -26,6 +31,11 @@ const Profile = () => {
         <div className="flex flex-col gap-4">
           <PageHeader title="Profile" />
           <PersonalDetails />
+          <EducationDetails />
+          <WorkExperience />
+          <ProjectDetails />
+          <Certifications />
+          <CustomDetails />
         </div>
         <Footer />
       </form>
