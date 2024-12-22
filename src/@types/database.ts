@@ -34,9 +34,9 @@ export interface IUserProfileEducationDetailsChildCollection {
   UserEducationDegree: string;
   UserEducationInstitution: string;
   UserEducationStartDate: Timestamp | FieldValue;
-  UserEducationEndDate?: Timestamp | FieldValue | null;
-  UserEducationGrade?: string | null;
-  UserEducationDescription?: string | null;
+  UserEducationEndDate: Timestamp | FieldValue;
+  UserEducationGrade: string;
+  UserEducationDescription: string | null;
 }
 
 export interface IUserProfileWorkExperienceChildCollection {

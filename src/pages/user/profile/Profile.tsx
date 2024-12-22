@@ -7,16 +7,33 @@ import {
 } from "../../../utilities/zod/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Footer from "../../../layout/user_page/Footer";
-import EducationDetails from "../../../component/user/profile/EducationDetails";
+import EducationDetails, {
+  UserProfileEducationDetailsChildCollection,
+} from "../../../component/user/profile/EducationDetails";
 import WorkExperience from "../../../component/user/profile/WorkExperience";
 import ProjectDetails from "../../../component/user/profile/ProjectDetails";
 import Certifications from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
+import { useState } from "react";
 
 const Profile = () => {
   const methods = useForm<UserProfileCreateFormFields>({
     resolver: zodResolver(userProfileCreateSchema),
   });
+
+  //Education Details
+  const [educationDetails, setEducationDetails] = useState<
+    UserProfileEducationDetailsChildCollection[]
+  >([
+    {
+      UserEducationDegree: "",
+      UserEducationInstitution: "",
+      UserEducationStartDate: null as unknown as Date,
+      UserEducationEndDate: null as unknown as Date,
+      UserEducationDescription: "",
+      UserEducationGrade: "",
+    },
+  ]);
 
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data);
@@ -31,7 +48,10 @@ const Profile = () => {
         <div className="flex flex-col gap-4">
           <PageHeader title="Profile" />
           <PersonalDetails />
-          <EducationDetails />
+          <EducationDetails
+            educationDetails={educationDetails}
+            setEducationDetails={setEducationDetails}
+          />
           <WorkExperience />
           <ProjectDetails />
           <Certifications />
