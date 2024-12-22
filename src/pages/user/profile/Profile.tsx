@@ -10,7 +10,9 @@ import Footer from "../../../layout/user_page/Footer";
 import EducationDetails, {
   UserProfileEducationDetailsChildCollection,
 } from "../../../component/user/profile/EducationDetails";
-import WorkExperience from "../../../component/user/profile/WorkExperience";
+import WorkExperience, {
+  UserProfileWorkExperienceChildCollection,
+} from "../../../component/user/profile/WorkExperience";
 import ProjectDetails from "../../../component/user/profile/ProjectDetails";
 import Certifications from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
@@ -35,6 +37,20 @@ const Profile = () => {
     },
   ]);
 
+  //Work Exp Details
+  const [workExpDetails, setWorkExpDetails] = useState<
+    UserProfileWorkExperienceChildCollection[]
+  >([
+    {
+      UserWorkExpAchievements: [],
+      UserWorkExpCompanyName: "",
+      UserWorkExpStartDate: null as unknown as Date,
+      UserWorkExpEndDate: null as unknown as Date,
+      UserWorkExpJobTitle: "",
+      UserWorkExpResponsibilities: [],
+    },
+  ]);
+
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data);
   };
@@ -52,7 +68,10 @@ const Profile = () => {
             educationDetails={educationDetails}
             setEducationDetails={setEducationDetails}
           />
-          <WorkExperience />
+          <WorkExperience
+            setWorkExpDetails={setWorkExpDetails}
+            workExpDetails={workExpDetails}
+          />
           <ProjectDetails />
           <Certifications />
           <CustomDetails />

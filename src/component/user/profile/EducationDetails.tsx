@@ -44,7 +44,7 @@ const EducationDetails = ({
 
   const handleChange = (
     index: number,
-    key: keyof IUserProfileEducationDetailsChildCollection,
+    key: keyof UserProfileEducationDetailsChildCollection,
     value: string | null | Date
   ) => {
     const updatedCheckpoints = [...educationDetails];
@@ -65,7 +65,7 @@ const EducationDetails = ({
       </div>
       {educationDetails.map((res, index) => {
         return (
-          <div className="grid grid-cols-3 gap-4 bg-onHoverBg p-4 rounded">
+          <div className="grid grid-cols-3 gap-4 bg-gray-50 border-[1.5px] border-inputBorder p-4 rounded">
             <InputWithTopHeader
               className={`mx-0 col-span-2`}
               label="Degree"
