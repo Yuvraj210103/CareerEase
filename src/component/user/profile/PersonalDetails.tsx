@@ -22,7 +22,7 @@ const PersonalDetails = () => {
       <div className="font-semibold flex items-center gap-2 text-lg">
         Personal Details
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-2">
+      <div className="grid grid-cols-3 gap-4 mt-2 bg-gray-50 border-[1.5px] border-inputBorder p-4 rounded">
         <InputWithTopHeader
           className="mx-0"
           label="Full Name"

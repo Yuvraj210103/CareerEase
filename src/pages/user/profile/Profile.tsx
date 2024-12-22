@@ -17,6 +17,8 @@ import ProjectDetails from "../../../component/user/profile/ProjectDetails";
 import Certifications from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
 import { useState } from "react";
+import { IUserProfileSkillsChildCollection } from "../../../@types/database";
+import SkillsDetail from "../../../component/user/profile/SkillsDetail";
 
 const Profile = () => {
   const methods = useForm<UserProfileCreateFormFields>({
@@ -51,6 +53,16 @@ const Profile = () => {
     },
   ]);
 
+  //Skill Details
+  const [skillsDetails, setSkillsDetails] = useState<
+    IUserProfileSkillsChildCollection[]
+  >([
+    {
+      UserSkillName: "",
+      UserSkillProficiency: "" as unknown as number,
+    },
+  ]);
+
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data);
   };
@@ -72,7 +84,12 @@ const Profile = () => {
             setWorkExpDetails={setWorkExpDetails}
             workExpDetails={workExpDetails}
           />
+
           <ProjectDetails />
+          <SkillsDetail
+            setSkillsDetails={setSkillsDetails}
+            skillsDetails={skillsDetails}
+          />
           <Certifications />
           <CustomDetails />
         </div>
