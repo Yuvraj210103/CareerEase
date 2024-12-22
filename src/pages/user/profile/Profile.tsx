@@ -21,8 +21,12 @@ import Certifications, {
 } from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
 import { useState } from "react";
-import { IUserProfileSkillsChildCollection } from "../../../@types/database";
+import {
+  IUserProfileCustomSections,
+  IUserProfileSkillsChildCollection,
+} from "../../../@types/database";
 import SkillsDetail from "../../../component/user/profile/SkillsDetail";
+import OtherDetails from "../../../component/user/profile/OtherDetails";
 
 const Profile = () => {
   const methods = useForm<UserProfileCreateFormFields>({
@@ -91,6 +95,16 @@ const Profile = () => {
     },
   ]);
 
+  //Custom Details
+  const [customDetails, setCustomDetails] = useState<
+    IUserProfileCustomSections[]
+  >([
+    {
+      UserProfileCustomSectionContent: "",
+      UserProfileCustomSectionTitle: "",
+    },
+  ]);
+
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data);
   };
@@ -101,7 +115,7 @@ const Profile = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pb-20">
           <PageHeader title="Profile" />
           <PersonalDetails />
           <EducationDetails
@@ -125,7 +139,11 @@ const Profile = () => {
             certificationsDetail={certificationsDetail}
             setCertificationsDetail={setCertificationsDetail}
           />
-          <CustomDetails />
+          <OtherDetails />
+          <CustomDetails
+            customDetails={customDetails}
+            setCustomDetails={setCustomDetails}
+          />
         </div>
         <Footer />
       </form>
