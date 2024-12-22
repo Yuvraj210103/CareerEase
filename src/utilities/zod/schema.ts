@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 const userProfilePersonalDetails = z.object({
-  UserFullName: z.string(),
-  UserEmail: z.string(),
-  UserPhone: z.string(),
+  UserFullName: z.string().min(3),
+  UserEmail: z.string().min(6),
+  UserPhone: z.string().min(10),
   UserAddress: z.string().nullable(),
   UserLinkedIn: z.string().nullable(),
   UserGitHub: z.string().nullable(),
@@ -15,7 +15,7 @@ const userProfileEducationalDetails = z.object({
   UserEducationDegree: z.string(),
   UserEducationInstitution: z.string(),
   UserEducationStartDate: z.date(),
-  UserEducationEndDate: z.date().nullable(),
+  UserEducationEndDate: z.date(),
   UserEducationGrade: z.string().nullable(),
   UserEducationDescription: z.string(),
 });
@@ -54,7 +54,9 @@ export const userProfileCreateSchema = z.object({
   UserProfilePersonalDetails: userProfilePersonalDetails,
   UserProfileEducationDetails: z.array(userProfileEducationalDetails),
   UserProfileWorkExperience: z.array(userProfileWorkExperienceDetails),
-  UserProfileSkills: z.array(z.string()),
+  UserProfileSkills: z.array(
+    z.object({ UserSkillName: z.string(), UserSkillProficiency: z.number() })
+  ),
   UserProfileProjects: z.array(userProfileProjectDetails),
   UserProfileCertifications: z.array(userProfileCertificationDetails),
   UserProfileLanguages: z.array(z.string()),

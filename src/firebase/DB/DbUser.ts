@@ -106,9 +106,8 @@ class DbUser {
       UserProfileEducationDetails.map((res) => {
         return {
           ...res,
-          UserEducationEndDate: res?.UserEducationEndDate
-            ? (res.UserEducationEndDate as unknown as Timestamp)
-            : null,
+          UserEducationEndDate:
+            res.UserEducationEndDate as unknown as Timestamp,
           UserEducationStartDate:
             res.UserEducationStartDate as unknown as Timestamp,
         };
@@ -201,9 +200,8 @@ class DbUser {
       UserProfileEducationDetails.map((res) => {
         return {
           ...res,
-          UserEducationEndDate: res?.UserEducationEndDate
-            ? (res.UserEducationEndDate as unknown as Timestamp)
-            : null,
+          UserEducationEndDate:
+            res.UserEducationEndDate as unknown as Timestamp,
           UserEducationStartDate:
             res.UserEducationStartDate as unknown as Timestamp,
         };
