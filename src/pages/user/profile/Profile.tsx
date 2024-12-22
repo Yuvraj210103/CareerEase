@@ -16,7 +16,9 @@ import WorkExperience, {
 import ProjectDetails, {
   UserProfileProjectsDetails,
 } from "../../../component/user/profile/ProjectDetails";
-import Certifications from "../../../component/user/profile/Certifications";
+import Certifications, {
+  UserProfileCertificationsDetails,
+} from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
 import { useState } from "react";
 import { IUserProfileSkillsChildCollection } from "../../../@types/database";
@@ -78,6 +80,17 @@ const Profile = () => {
     },
   ]);
 
+  //certifications Detail
+  const [certificationsDetail, setCertificationsDetail] = useState<
+    UserProfileCertificationsDetails[]
+  >([
+    {
+      UserCertificateIssueDate: null as unknown as Date,
+      UserCertificateIssuedBy: "",
+      UserCertificateName: "",
+    },
+  ]);
+
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data);
   };
@@ -108,7 +121,10 @@ const Profile = () => {
             projectDetails={projectDetails}
             setProjectDetails={setProjectDetails}
           />
-          <Certifications />
+          <Certifications
+            certificationsDetail={certificationsDetail}
+            setCertificationsDetail={setCertificationsDetail}
+          />
           <CustomDetails />
         </div>
         <Footer />
