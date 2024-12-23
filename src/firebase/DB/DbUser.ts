@@ -9,7 +9,6 @@ import {
   serverTimestamp,
   setDoc,
   Timestamp,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { CollectionName } from "../../@types/enum";
@@ -17,14 +16,20 @@ import { db } from "../config";
 import CustomError from "../../utilities/CustomError";
 import {
   IAuthUsersCollection,
+  IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
   IUserProfileProjectsDetails,
   IUserProfilesCollection,
+  IUserProfileSkillsChildCollection,
   IUserProfileWorkExperienceChildCollection,
 } from "../../@types/database";
 import { getNewDocId } from "./utils";
 import { UserProfileCreateFormFields } from "../../utilities/zod/schema";
+import { UserProfileEducationDetailsChildCollection } from "../../component/user/profile/EducationDetails";
+import { UserProfileWorkExperienceChildCollection } from "../../component/user/profile/WorkExperience";
+import { UserProfileProjectsDetails } from "../../component/user/profile/ProjectDetails";
+import { UserProfileCertificationsDetails } from "../../component/user/profile/Certifications";
 
 class DbUser {
   static getAuthUser = (uId: string) => {
@@ -76,23 +81,32 @@ class DbUser {
     return getDocs(loggedInQuery);
   };
 
-  static createUserProfile = (
-    data: UserProfileCreateFormFields,
-    userId: string
-  ) => {
+  static createUserProfile = ({
+    data,
+    userId,
+    certificationDetails,
+    customDetails,
+    educationDetails,
+    projectDetails,
+    skillsDetails,
+    workExpDetails,
+  }: {
+    data: UserProfileCreateFormFields;
+    userId: string;
+    educationDetails: UserProfileEducationDetailsChildCollection[];
+    workExpDetails: UserProfileWorkExperienceChildCollection[];
+    skillsDetails: IUserProfileSkillsChildCollection[];
+    projectDetails: UserProfileProjectsDetails[];
+    certificationDetails: UserProfileCertificationsDetails[];
+    customDetails: IUserProfileCustomSections[];
+  }) => {
     const userProfileId = getNewDocId(CollectionName.userProfiles);
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
 
     const {
-      UserProfileCertifications,
-      UserProfileCustomSections,
-      UserProfileEducationDetails,
-      UserProfileHobbies,
-      UserProfileLanguages,
       UserProfilePersonalDetails,
-      UserProfileProjects,
-      UserProfileSkills,
-      UserProfileWorkExperience,
+      UserProfileLanguages,
+      UserProfileHobbies,
     } = data;
 
     const profileDetails: IUserProfilePersonalDetails = {
@@ -103,7 +117,7 @@ class DbUser {
     };
 
     const educationalDetails: IUserProfileEducationDetailsChildCollection[] =
-      UserProfileEducationDetails.map((res) => {
+      educationDetails.map((res) => {
         return {
           ...res,
           UserEducationEndDate:
@@ -114,7 +128,7 @@ class DbUser {
       });
 
     const workExperience: IUserProfileWorkExperienceChildCollection[] =
-      UserProfileWorkExperience.map((res) => {
+      workExpDetails.map((res) => {
         return {
           ...res,
           UserWorkExpStartDate:
@@ -127,7 +141,7 @@ class DbUser {
         };
       });
 
-    const projects: IUserProfileProjectsDetails[] = UserProfileProjects.map(
+    const projects: IUserProfileProjectsDetails[] = projectDetails.map(
       (res) => {
         return {
           ...res,
@@ -141,7 +155,7 @@ class DbUser {
       }
     );
 
-    const certification = UserProfileCertifications.map((res) => {
+    const certification = certificationDetails.map((res) => {
       return {
         ...res,
         UserCertificateIssueDate:
@@ -158,12 +172,12 @@ class DbUser {
       UserProfilePersonalDetails: profileDetails,
       UserProfileEducationDetails: educationalDetails,
       UserProfileWorkExperience: workExperience,
-      UserProfileSkills: UserProfileSkills || [],
+      UserProfileSkills: skillsDetails,
       UserProfileProjects: projects,
       UserProfileCertifications: certification,
-      UserProfileLanguages: UserProfileLanguages || [],
-      UserProfileHobbies: UserProfileHobbies || [],
-      UserProfileCustomSections: UserProfileCustomSections || [],
+      UserProfileLanguages,
+      UserProfileHobbies,
+      UserProfileCustomSections: customDetails || [],
       UserProfileCreatedAt: serverTimestamp(),
       UserProfileModifiedAt: serverTimestamp(),
     };
@@ -171,22 +185,16 @@ class DbUser {
     return setDoc(docRef, newUserProfile);
   };
 
-  static updateUserProfile = (
+  /*  static updateUserProfile = (
     data: UserProfileCreateFormFields,
     userProfileId: string
   ) => {
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
 
     const {
-      UserProfileCertifications,
-      UserProfileCustomSections,
-      UserProfileEducationDetails,
-      UserProfileHobbies,
-      UserProfileLanguages,
+     
       UserProfilePersonalDetails,
-      UserProfileProjects,
-      UserProfileSkills,
-      UserProfileWorkExperience,
+      
     } = data;
 
     const profileDetails: IUserProfilePersonalDetails = {
@@ -260,7 +268,7 @@ class DbUser {
     };
 
     return updateDoc(docRef, newUserProfile);
-  };
+  }; */
 }
 
 export default DbUser;

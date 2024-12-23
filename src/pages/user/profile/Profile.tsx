@@ -27,8 +27,16 @@ import {
 } from "../../../@types/database";
 import SkillsDetail from "../../../component/user/profile/SkillsDetail";
 import OtherDetails from "../../../component/user/profile/OtherDetails";
+import { errorHandler } from "../../../utilities/CustomError";
+import { isUserProfileFormInvalid } from "../../../utilities/profileCreateHelper";
+import { useAuthState, useUIState } from "../../../store";
+import DbUser from "../../../firebase/DB/DbUser";
 
 const Profile = () => {
+  const { setLoading } = useUIState();
+
+  const { user } = useAuthState();
+
   const methods = useForm<UserProfileCreateFormFields>({
     resolver: zodResolver(userProfileCreateSchema),
   });
@@ -106,11 +114,38 @@ const Profile = () => {
   ]);
 
   const onSubmit = async (data: UserProfileCreateFormFields) => {
-    console.log(data);
+    console.log(data, "data here");
+    if (!user) return;
+    try {
+      setLoading(true);
+      isUserProfileFormInvalid({
+        certificationDetails: certificationsDetail,
+        customDetails,
+        educationDetails,
+        projectDetails,
+        skillsDetails,
+        workExpDetails,
+      });
+      await DbUser.createUserProfile({
+        data,
+        userId: user.AuthUserId,
+        certificationDetails: certificationsDetail,
+        customDetails,
+        educationDetails,
+        projectDetails,
+        skillsDetails,
+        workExpDetails,
+      });
+      setLoading(false);
+    } catch (error) {
+      errorHandler(error);
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   //console errors
-  console.log(methods.formState.errors.UserProfilePersonalDetails);
+  console.log(methods.formState.errors);
 
   return (
     <FormProvider {...methods}>

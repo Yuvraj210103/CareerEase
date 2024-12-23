@@ -1,5 +1,7 @@
 import { IUserProfileCertificationsDetails } from "../../../@types/database";
 import { toDate } from "../../../utilities/misc";
+import { isCertificationDetailsInValid } from "../../../utilities/profileCreateHelper";
+import { showSnackbar } from "../../../utilities/TsxUtils";
 import Button from "../../common/button/Button";
 import InputDate from "../../common/inputs/InputDate";
 import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
@@ -25,6 +27,13 @@ const Certifications = ({
   setCertificationsDetail,
 }: CertificationsProps) => {
   const handleAddEducation = () => {
+    if (isCertificationDetailsInValid(certificationsDetail)) {
+      showSnackbar({
+        message: "Please fill the required certification details to add more",
+        type: "error",
+      });
+      return;
+    }
     setCertificationsDetail([
       ...certificationsDetail,
       {
@@ -58,7 +67,6 @@ const Certifications = ({
     setCertificationsDetail(updatedCheckpoints);
   };
 
-  console.log(certificationsDetail, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">

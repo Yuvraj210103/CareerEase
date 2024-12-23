@@ -11,7 +11,7 @@ const userProfilePersonalDetails = z.object({
   UserDateOfBirth: z.date().nullable(),
 });
 
-const userProfileEducationalDetails = z.object({
+/* const userProfileEducationalDetails = z.object({
   UserEducationDegree: z.string(),
   UserEducationInstitution: z.string(),
   UserEducationStartDate: z.date(),
@@ -48,20 +48,21 @@ const userProfileCertificationDetails = z.object({
 const userProfileCustomDetails = z.object({
   UserProfileCustomSectionTitle: z.string(),
   UserProfileCustomSectionContent: z.string(),
-});
+}); */
 
 export const userProfileCreateSchema = z.object({
   UserProfilePersonalDetails: userProfilePersonalDetails,
-  UserProfileEducationDetails: z.array(userProfileEducationalDetails),
+  UserProfileLanguages: z.array(z.string()).default([]),
+  UserProfileHobbies: z.array(z.string()).default([]),
+  /* UserProfileEducationDetails: z.array(userProfileEducationalDetails),
   UserProfileWorkExperience: z.array(userProfileWorkExperienceDetails),
   UserProfileSkills: z.array(
     z.object({ UserSkillName: z.string(), UserSkillProficiency: z.number() })
   ),
   UserProfileProjects: z.array(userProfileProjectDetails),
   UserProfileCertifications: z.array(userProfileCertificationDetails),
-  UserProfileLanguages: z.array(z.string()),
-  UserProfileHobbies: z.array(z.string()),
-  UserProfileCustomSections: z.array(userProfileCustomDetails),
+  
+  UserProfileCustomSections: z.array(userProfileCustomDetails), */
 });
 
 export type UserProfileCreateFormFields = z.infer<

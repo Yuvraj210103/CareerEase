@@ -1,5 +1,7 @@
 import { IUserProfileProjectsDetails } from "../../../@types/database";
 import { toDate } from "../../../utilities/misc";
+import { isProjectDetailsInValid } from "../../../utilities/profileCreateHelper";
+import { showSnackbar } from "../../../utilities/TsxUtils";
 import Button from "../../common/button/Button";
 import InputDate from "../../common/inputs/InputDate";
 import InputTags from "../../common/inputs/InputTags";
@@ -27,6 +29,13 @@ const ProjectDetails = ({
   setProjectDetails,
 }: ProjectDetailsProps) => {
   const handleAddEducation = () => {
+    if (isProjectDetailsInValid(projectDetails)) {
+      showSnackbar({
+        message: "Please fill the required project details to add more",
+        type: "error",
+      });
+      return;
+    }
     setProjectDetails([
       ...projectDetails,
       {
@@ -61,7 +70,6 @@ const ProjectDetails = ({
     setProjectDetails(updatedCheckpoints);
   };
 
-  console.log(projectDetails, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">

@@ -14,15 +14,20 @@ import "@mantine/dates/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import useOnAuthStateChanged from "./hooks/useOnAuthStateChanged";
 import Layout from "./layout/landing_page";
-import { useAuthState } from "./store";
+import { useAuthState, useUIState } from "./store";
 import SplashScreen from "./component/splash_screen/SplashScreen";
 import UserPageLayout from "./layout/user_page";
 import UserHome from "./pages/user/home/Home";
 import Home from "./pages/home/Home";
 import Profile from "./pages/user/profile/Profile";
+import { useShowLoader } from "./hooks/useShowLoader";
 
 function App() {
   const { user, loading } = useAuthState();
+
+  const { loading: loader } = useUIState();
+
+  useShowLoader(loader);
 
   useOnAuthStateChanged();
 

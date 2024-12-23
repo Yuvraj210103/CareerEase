@@ -1,4 +1,6 @@
 import { IUserProfileCustomSections } from "../../../@types/database";
+import { isCustomDetailsInValid } from "../../../utilities/profileCreateHelper";
+import { showSnackbar } from "../../../utilities/TsxUtils";
 import Button from "../../common/button/Button";
 import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
 import TextareaWithTopHeader from "../../common/inputs/TextareaWithTopHeader";
@@ -15,6 +17,13 @@ const CustomDetails = ({
   setCustomDetails,
 }: CustomDetailsProps) => {
   const handleAddCustomDetails = () => {
+    if (isCustomDetailsInValid(customDetails)) {
+      showSnackbar({
+        message: "Please fill the required custom details to add more",
+        type: "error",
+      });
+      return;
+    }
     setCustomDetails([
       ...customDetails,
       {
@@ -40,7 +49,6 @@ const CustomDetails = ({
     setCustomDetails(updatedCheckpoints);
   };
 
-  console.log(customDetails, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">

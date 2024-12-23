@@ -4,6 +4,8 @@ import InputDate from "../../common/inputs/InputDate";
 import { toDate } from "../../../utilities/misc";
 import TextareaWithTopHeader from "../../common/inputs/TextareaWithTopHeader";
 import Button from "../../common/button/Button";
+import { showSnackbar } from "../../../utilities/TsxUtils";
+import { isEducationDetailsInValid } from "../../../utilities/profileCreateHelper";
 
 export interface UserProfileEducationDetailsChildCollection
   extends Omit<
@@ -24,6 +26,13 @@ const EducationDetails = ({
   >;
 }) => {
   const handleAddEducation = () => {
+    if (isEducationDetailsInValid(educationDetails)) {
+      showSnackbar({
+        message: "Please fill the required education details to add more",
+        type: "error",
+      });
+      return;
+    }
     setEducationDetails([
       ...educationDetails,
       {
@@ -57,7 +66,6 @@ const EducationDetails = ({
     setEducationDetails(updatedCheckpoints);
   };
 
-  console.log(educationDetails, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">
@@ -84,7 +92,7 @@ const EducationDetails = ({
             />
             <InputWithTopHeader
               className={`mx-0`}
-              label="Grade/Percentage"
+              label="Grade/Percentage (Optional)"
               value={res.UserEducationGrade || ""}
               onChange={(e) =>
                 handleChange(index, "UserEducationGrade", e.target.value)
@@ -115,7 +123,7 @@ const EducationDetails = ({
 
             <TextareaWithTopHeader
               className={`mx-0`}
-              label="Description"
+              label="Description (Optional)"
               value={res.UserEducationDescription || ""}
               onChange={(e) =>
                 handleChange(index, "UserEducationDescription", e.target.value)
