@@ -34,7 +34,7 @@ import DbUser from "../../../firebase/DB/DbUser";
 const Profile = () => {
   const { setLoading } = useUIState();
 
-  const { user } = useAuthState();
+  const { authUser } = useAuthState();
 
   const methods = useForm<UserProfileCreateFormFields>({
     resolver: zodResolver(userProfileCreateSchema),
@@ -114,20 +114,12 @@ const Profile = () => {
 
   const onSubmit = async (data: UserProfileCreateFormFields) => {
     console.log(data, "data here");
-    if (!user) return;
+    if (!authUser) return;
     try {
       setLoading(true);
-      /* isUserProfileFormInvalid({
-        certificationDetails: certificationsDetail,
-        customDetails,
-        educationDetails,
-        projectDetails,
-        skillsDetails,
-        workExpDetails,
-      }); */
       await DbUser.createUserProfile({
         data,
-        userId: user.AuthUserId,
+        userId: authUser.AuthUserId,
         certificationDetails: certificationsDetail,
         customDetails,
         educationDetails,

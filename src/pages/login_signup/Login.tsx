@@ -31,7 +31,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setUser } = useAuthState();
+  const { setAuthUser } = useAuthState();
 
   const auth = getAuth();
 
@@ -43,7 +43,7 @@ const Login = () => {
 
       const userSnapshot = await DbUser.getAuthUser(uId);
       const user = userSnapshot.data() as IAuthUsersCollection;
-      setUser(user);
+      setAuthUser(user);
 
       //* Create a new loggedInUser doc
       const loggedInId = getNewDocId(CollectionName.loggedInUsers);

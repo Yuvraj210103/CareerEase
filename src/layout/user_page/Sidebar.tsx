@@ -8,7 +8,7 @@ import { PageRoutes } from "../../@types/enum";
 import { useAuthState } from "../../store";
 
 const Sidebar = () => {
-  const { user } = useAuthState();
+  const { authUser } = useAuthState();
   return (
     <AppShell.Navbar p="0">
       <div className="flex flex-col bg-sidebarBg h-full w-full py-4 gap-4">
@@ -18,7 +18,7 @@ const Sidebar = () => {
           </div>
           <div className="flex flex-col text-surface  leading-5">
             <div className="font-semibold">Yuvraj Singh</div>
-            <div className="text-sm">{user?.AuthUserEmail}</div>
+            <div className="text-sm">{authUser?.AuthUserEmail}</div>
           </div>
         </div>
         <MenuItem

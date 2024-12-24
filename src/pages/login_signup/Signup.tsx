@@ -28,7 +28,7 @@ import { db } from "../../firebase/config";
 import { useAuthState } from "../../store";
 
 const SignUp = () => {
-  const { setUser } = useAuthState();
+  const { setAuthUser } = useAuthState();
 
   const [email, setEmail] = useState("");
 
@@ -53,7 +53,7 @@ const SignUp = () => {
         AuthUserModifiedAt: serverTimestamp(),
       };
 
-      setUser(newUser);
+      setAuthUser(newUser);
 
       //* Create a new loggedInUser doc
       const loggedInId = getNewDocId(CollectionName.loggedInUsers);

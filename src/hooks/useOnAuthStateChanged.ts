@@ -15,7 +15,7 @@ import DbUser from "../firebase/DB/DbUser";
 import { IAuthUsersCollection } from "../@types/database";
 
 const useOnAuthStateChanged = () => {
-  const { setUser, setLoading } = useAuthState();
+  const { setAuthUser, setLoading } = useAuthState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,7 +70,7 @@ const useOnAuthStateChanged = () => {
           loggedInUserData.LoggedInUserId
         );
         const user = snapshot.data() as IAuthUsersCollection;
-        setUser(user);
+        setAuthUser(user);
         if (!location.pathname.includes("/user")) {
           navigate(PageRoutes.USER_HOME);
         }

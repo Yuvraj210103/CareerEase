@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   setDoc,
   Timestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { CollectionName } from "../../@types/enum";
@@ -214,16 +215,31 @@ class DbUser {
     return setDoc(docRef, newUserProfile);
   };
 
-  /*  static updateUserProfile = (
-    data: UserProfileCreateFormFields,
-    userProfileId: string
-  ) => {
+  static updateUserProfile = ({
+    data,
+    userProfileId,
+    certificationDetails,
+    customDetails,
+    educationDetails,
+    projectDetails,
+    skillsDetails,
+    workExpDetails,
+  }: {
+    data: UserProfileCreateFormFields;
+    userProfileId: string;
+    educationDetails: UserProfileEducationDetailsChildCollection[];
+    workExpDetails: UserProfileWorkExperienceChildCollection[];
+    skillsDetails: IUserProfileSkillsChildCollection[];
+    projectDetails: UserProfileProjectsDetails[];
+    certificationDetails: UserProfileCertificationsDetails[];
+    customDetails: IUserProfileCustomSections[];
+  }) => {
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
 
     const {
-     
       UserProfilePersonalDetails,
-      
+      UserProfileLanguages,
+      UserProfileHobbies,
     } = data;
 
     const profileDetails: IUserProfilePersonalDetails = {
@@ -234,32 +250,48 @@ class DbUser {
     };
 
     const educationalDetails: IUserProfileEducationDetailsChildCollection[] =
-      UserProfileEducationDetails.map((res) => {
-        return {
-          ...res,
-          UserEducationEndDate:
-            res.UserEducationEndDate as unknown as Timestamp,
-          UserEducationStartDate:
-            res.UserEducationStartDate as unknown as Timestamp,
-        };
-      });
+      educationDetails
+        .filter(
+          (res) =>
+            res.UserEducationDegree &&
+            res.UserEducationEndDate &&
+            res.UserEducationInstitution &&
+            res.UserEducationStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserEducationEndDate:
+              res.UserEducationEndDate as unknown as Timestamp,
+            UserEducationStartDate:
+              res.UserEducationStartDate as unknown as Timestamp,
+          };
+        });
 
     const workExperience: IUserProfileWorkExperienceChildCollection[] =
-      UserProfileWorkExperience.map((res) => {
-        return {
-          ...res,
-          UserWorkExpStartDate:
-            res.UserWorkExpStartDate as unknown as Timestamp,
-          UserWorkExpEndDate: res?.UserWorkExpEndDate
-            ? (res.UserWorkExpEndDate as unknown as Timestamp)
-            : null,
-          UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-          UserWorkExpAchievements: res.UserWorkExpAchievements || [],
-        };
-      });
+      workExpDetails
+        .filter(
+          (res) =>
+            res.UserWorkExpJobTitle &&
+            res.UserWorkExpCompanyName &&
+            res.UserWorkExpStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserWorkExpStartDate:
+              res.UserWorkExpStartDate as unknown as Timestamp,
+            UserWorkExpEndDate: res?.UserWorkExpEndDate
+              ? (res.UserWorkExpEndDate as unknown as Timestamp)
+              : null,
+            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
+            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
+          };
+        });
 
-    const projects: IUserProfileProjectsDetails[] = UserProfileProjects.map(
-      (res) => {
+    const projects: IUserProfileProjectsDetails[] = projectDetails
+      .filter((res) => res.UserProjectTitle && res.UserProjectDescription)
+      .map((res) => {
         return {
           ...res,
           UserProjectStartDate: res.UserProjectStartDate
@@ -269,35 +301,48 @@ class DbUser {
             ? (res.UserProjectEndDate as unknown as Timestamp)
             : null,
         };
-      }
-    );
+      });
 
-    const certification = UserProfileCertifications.map((res) => {
-      return {
-        ...res,
-        UserCertificateIssueDate:
-          res.UserCertificateIssueDate as unknown as Timestamp,
-        UserCertificateExpiryDate: res.UserCertificateExpiryDate
-          ? (res.UserCertificateExpiryDate as unknown as Timestamp)
-          : null,
-      };
-    });
+    const certification: IUserProfileCertificationsDetails[] =
+      certificationDetails
+        .filter(
+          (res) =>
+            res.UserCertificateName &&
+            res.UserCertificateIssuedBy &&
+            res.UserCertificateIssueDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserCertificateIssueDate:
+              res.UserCertificateIssueDate as unknown as Timestamp,
+            UserCertificateExpiryDate: res.UserCertificateExpiryDate
+              ? (res.UserCertificateExpiryDate as unknown as Timestamp)
+              : null,
+          };
+        });
 
     const newUserProfile: Partial<IUserProfilesCollection> = {
+      UserProfileId: userProfileId,
       UserProfilePersonalDetails: profileDetails,
       UserProfileEducationDetails: educationalDetails,
       UserProfileWorkExperience: workExperience,
-      UserProfileSkills: UserProfileSkills || [],
+      UserProfileSkills: skillsDetails.filter(
+        (s) => s.UserSkillName && s.UserSkillProficiency
+      ),
       UserProfileProjects: projects,
       UserProfileCertifications: certification,
-      UserProfileLanguages: UserProfileLanguages || [],
-      UserProfileHobbies: UserProfileHobbies || [],
-      UserProfileCustomSections: UserProfileCustomSections || [],
+      UserProfileLanguages: UserProfileLanguages.filter((s) => s),
+      UserProfileHobbies: UserProfileHobbies.filter((s) => s),
+      UserProfileCustomSections: customDetails.filter(
+        (s) =>
+          s.UserProfileCustomSectionContent && s.UserProfileCustomSectionTitle
+      ),
       UserProfileModifiedAt: serverTimestamp(),
     };
 
     return updateDoc(docRef, newUserProfile);
-  }; */
+  };
 }
 
 export default DbUser;

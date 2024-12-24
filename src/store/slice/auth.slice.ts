@@ -8,16 +8,16 @@ import { LocalStorageKey } from "../../@types/enum";
 import DbUser from "../../firebase/DB/DbUser";
 
 interface AuthState {
-  user: IAuthUsersCollection | null;
-  setUser: (user: IAuthUsersCollection | null) => void;
+  authUser: IAuthUsersCollection | null;
+  setAuthUser: (user: IAuthUsersCollection | null) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   userSignOut: () => void;
 }
 
 export const createAuthSlice: StateCreator<AuthState> = (set) => ({
-  user: null,
-  setUser: (user) => set((state) => ({ ...state, user })),
+  authUser: null,
+  setAuthUser: (user) => set((state) => ({ ...state, user })),
   loading: true,
   setLoading: (loading) => set((state) => ({ ...state, loading })),
   // For logging out user

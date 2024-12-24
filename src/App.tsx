@@ -23,7 +23,7 @@ import Profile from "./pages/user/profile/Profile";
 import { useShowLoader } from "./hooks/useShowLoader";
 
 function App() {
-  const { user, loading } = useAuthState();
+  const { authUser, loading } = useAuthState();
 
   const { loading: loader } = useUIState();
 
@@ -35,9 +35,9 @@ function App() {
     return <SplashScreen />;
   }
 
-  console.log(user, "here");
+  console.log(authUser, "here");
 
-  if (user) {
+  if (authUser) {
     return (
       <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
         <ModalsProvider
