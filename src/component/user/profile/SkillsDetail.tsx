@@ -1,4 +1,6 @@
 import { IUserProfileSkillsChildCollection } from "../../../@types/database";
+import { isSkillDetailsInValid } from "../../../utilities/profileCreateHelper";
+import { showSnackbar } from "../../../utilities/TsxUtils";
 import Button from "../../common/button/Button";
 import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
 
@@ -14,6 +16,13 @@ const SkillsDetail = ({
   skillsDetails,
 }: SkillsDetailProps) => {
   const handleAddSkill = () => {
+    if (isSkillDetailsInValid(skillsDetails)) {
+      showSnackbar({
+        message: "Please fill the required skill details to add more",
+        type: "error",
+      });
+      return;
+    }
     setSkillsDetails([
       ...skillsDetails,
       {
@@ -43,7 +52,6 @@ const SkillsDetail = ({
     setSkillsDetails(updatedCheckpoints);
   };
 
-  console.log(skillsDetails, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">

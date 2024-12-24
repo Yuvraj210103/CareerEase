@@ -3,6 +3,8 @@ import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
 import { UserProfileCreateFormFields } from "../../../utilities/zod/schema";
 import InputDate from "../../common/inputs/InputDate";
 import { useEffect, useState } from "react";
+import { useAuthState } from "../../../store";
+import { toDate } from "../../../utilities/misc";
 
 const PersonalDetails = () => {
   const {
@@ -11,11 +13,19 @@ const PersonalDetails = () => {
     setValue,
   } = useFormContext<UserProfileCreateFormFields>();
 
+  const { userProfile } = useAuthState();
+
   const [dob, setDob] = useState<Date | null>(null);
 
   useEffect(() => {
     setValue("UserProfilePersonalDetails.UserDateOfBirth", dob);
   }, [dob]);
+
+  useEffect(() => {
+    if (userProfile?.UserProfilePersonalDetails.UserDateOfBirth) {
+      setDob(toDate(userProfile?.UserProfilePersonalDetails.UserDateOfBirth));
+    }
+  }, [userProfile]);
 
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">

@@ -4,6 +4,8 @@ import Button from "../../common/button/Button";
 import InputDate from "../../common/inputs/InputDate";
 import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
 import InputTags from "../../common/inputs/InputTags";
+import { showSnackbar } from "../../../utilities/TsxUtils";
+import { isWorkExpInValid } from "../../../utilities/profileCreateHelper";
 
 export interface UserProfileWorkExperienceChildCollection
   extends Omit<
@@ -26,6 +28,13 @@ const WorkExperience = ({
   workExpDetails,
 }: IWorkExperienceProps) => {
   const handleAddWorkExp = () => {
+    if (isWorkExpInValid(workExpDetails)) {
+      showSnackbar({
+        message: "Please fill the required work exp details to add more",
+        type: "error",
+      });
+      return;
+    }
     setWorkExpDetails([
       ...workExpDetails,
       {
@@ -64,7 +73,6 @@ const WorkExperience = ({
     setWorkExpDetails(updatedCheckpoints);
   };
 
-  console.log(workExpDetails, "here");
   return (
     <div className="flex flex-col gap-4 bg-surface p-4 shadow rounded">
       <div className="font-semibold flex items-center gap-2 text-lg">

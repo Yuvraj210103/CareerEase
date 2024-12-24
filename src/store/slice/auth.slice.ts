@@ -2,22 +2,27 @@ import { StateCreator } from "zustand";
 import {
   ILoggedInUsersCollection,
   IAuthUsersCollection,
+  IUserProfilesCollection,
 } from "../../@types/database";
 import * as storage from "../../utilities/Storage";
 import { LocalStorageKey } from "../../@types/enum";
 import DbUser from "../../firebase/DB/DbUser";
 
 interface AuthState {
-  user: IAuthUsersCollection | null;
-  setUser: (user: IAuthUsersCollection | null) => void;
+  authUser: IAuthUsersCollection | null;
+  setAuthUser: (authUser: IAuthUsersCollection | null) => void;
+  userProfile: IUserProfilesCollection | null;
+  setUserProfile: (userProfile: IUserProfilesCollection | null) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   userSignOut: () => void;
 }
 
 export const createAuthSlice: StateCreator<AuthState> = (set) => ({
-  user: null,
-  setUser: (user) => set((state) => ({ ...state, user })),
+  authUser: null,
+  setAuthUser: (authUser) => set((state) => ({ ...state, authUser })),
+  userProfile: null,
+  setUserProfile: (userProfile) => set((state) => ({ ...state, userProfile })),
   loading: true,
   setLoading: (loading) => set((state) => ({ ...state, loading })),
   // For logging out user
@@ -29,7 +34,7 @@ export const createAuthSlice: StateCreator<AuthState> = (set) => ({
     if (loggedInUser) {
       set((state) => ({
         ...state,
-        user: null,
+        authUser: null,
         company: null,
         client: null,
         superuser: null,

@@ -8,17 +8,22 @@ import { PageRoutes } from "../../@types/enum";
 import { useAuthState } from "../../store";
 
 const Sidebar = () => {
-  const { user } = useAuthState();
+  const { authUser, userProfile } = useAuthState();
   return (
     <AppShell.Navbar p="0">
       <div className="flex flex-col bg-sidebarBg h-full w-full py-4 gap-4">
         <div className="flex w-full items-center justify-center gap-2 border-b border-[#505153] pb-4">
           <div className="bg-surface text-textPrimary font-bold text-4xl rounded-full p-2 size-[80px] flex items-center justify-center">
-            Y
+            {userProfile?.UserProfilePersonalDetails?.UserFullName?.slice(
+              0,
+              1
+            )?.toUpperCase() || "U"}
           </div>
           <div className="flex flex-col text-surface  leading-5">
-            <div className="font-semibold">Yuvraj Singh</div>
-            <div className="text-sm">{user?.AuthUserEmail}</div>
+            <div className="font-semibold">
+              {userProfile?.UserProfilePersonalDetails?.UserFullName || "User"}
+            </div>
+            <div className="text-sm">{authUser?.AuthUserEmail}</div>
           </div>
         </div>
         <MenuItem

@@ -14,15 +14,21 @@ import "@mantine/dates/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import useOnAuthStateChanged from "./hooks/useOnAuthStateChanged";
 import Layout from "./layout/landing_page";
-import { useAuthState } from "./store";
+import { useAuthState, useUIState } from "./store";
 import SplashScreen from "./component/splash_screen/SplashScreen";
 import UserPageLayout from "./layout/user_page";
 import UserHome from "./pages/user/home/Home";
 import Home from "./pages/home/Home";
 import Profile from "./pages/user/profile/Profile";
+import { useShowLoader } from "./hooks/useShowLoader";
+import ResumeTemplates from "./pages/user/resume_templates/ResumeTemplates";
 
 function App() {
-  const { user, loading } = useAuthState();
+  const { authUser, loading } = useAuthState();
+
+  const { loading: loader } = useUIState();
+
+  useShowLoader(loader);
 
   useOnAuthStateChanged();
 
@@ -30,9 +36,9 @@ function App() {
     return <SplashScreen />;
   }
 
-  console.log(user, "here");
+  console.log(authUser, "here");
 
-  if (user) {
+  if (authUser) {
     return (
       <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
         <ModalsProvider
@@ -43,6 +49,10 @@ function App() {
             <Routes>
               <Route path={PageRoutes.USER_HOME} Component={UserHome} />
               <Route path={PageRoutes.USER_PROFILE} Component={Profile} />
+              <Route
+                path={PageRoutes.USER_RESUME_TEMPLATES}
+                Component={ResumeTemplates}
+              />
             </Routes>
           </UserPageLayout>
         </ModalsProvider>

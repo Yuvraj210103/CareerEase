@@ -17,14 +17,21 @@ import { db } from "../config";
 import CustomError from "../../utilities/CustomError";
 import {
   IAuthUsersCollection,
+  IUserProfileCertificationsDetails,
+  IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
   IUserProfileProjectsDetails,
   IUserProfilesCollection,
+  IUserProfileSkillsChildCollection,
   IUserProfileWorkExperienceChildCollection,
 } from "../../@types/database";
 import { getNewDocId } from "./utils";
 import { UserProfileCreateFormFields } from "../../utilities/zod/schema";
+import { UserProfileEducationDetailsChildCollection } from "../../component/user/profile/EducationDetails";
+import { UserProfileWorkExperienceChildCollection } from "../../component/user/profile/WorkExperience";
+import { UserProfileProjectsDetails } from "../../component/user/profile/ProjectDetails";
+import { UserProfileCertificationsDetails } from "../../component/user/profile/Certifications";
 
 class DbUser {
   static getAuthUser = (uId: string) => {
@@ -76,23 +83,32 @@ class DbUser {
     return getDocs(loggedInQuery);
   };
 
-  static createUserProfile = (
-    data: UserProfileCreateFormFields,
-    userId: string
-  ) => {
+  static createUserProfile = ({
+    data,
+    userId,
+    certificationDetails,
+    customDetails,
+    educationDetails,
+    projectDetails,
+    skillsDetails,
+    workExpDetails,
+  }: {
+    data: UserProfileCreateFormFields;
+    userId: string;
+    educationDetails: UserProfileEducationDetailsChildCollection[];
+    workExpDetails: UserProfileWorkExperienceChildCollection[];
+    skillsDetails: IUserProfileSkillsChildCollection[];
+    projectDetails: UserProfileProjectsDetails[];
+    certificationDetails: UserProfileCertificationsDetails[];
+    customDetails: IUserProfileCustomSections[];
+  }) => {
     const userProfileId = getNewDocId(CollectionName.userProfiles);
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
 
     const {
-      UserProfileCertifications,
-      UserProfileCustomSections,
-      UserProfileEducationDetails,
-      UserProfileHobbies,
-      UserProfileLanguages,
       UserProfilePersonalDetails,
-      UserProfileProjects,
-      UserProfileSkills,
-      UserProfileWorkExperience,
+      UserProfileLanguages,
+      UserProfileHobbies,
     } = data;
 
     const profileDetails: IUserProfilePersonalDetails = {
@@ -103,32 +119,48 @@ class DbUser {
     };
 
     const educationalDetails: IUserProfileEducationDetailsChildCollection[] =
-      UserProfileEducationDetails.map((res) => {
-        return {
-          ...res,
-          UserEducationEndDate:
-            res.UserEducationEndDate as unknown as Timestamp,
-          UserEducationStartDate:
-            res.UserEducationStartDate as unknown as Timestamp,
-        };
-      });
+      educationDetails
+        .filter(
+          (res) =>
+            res.UserEducationDegree &&
+            res.UserEducationEndDate &&
+            res.UserEducationInstitution &&
+            res.UserEducationStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserEducationEndDate:
+              res.UserEducationEndDate as unknown as Timestamp,
+            UserEducationStartDate:
+              res.UserEducationStartDate as unknown as Timestamp,
+          };
+        });
 
     const workExperience: IUserProfileWorkExperienceChildCollection[] =
-      UserProfileWorkExperience.map((res) => {
-        return {
-          ...res,
-          UserWorkExpStartDate:
-            res.UserWorkExpStartDate as unknown as Timestamp,
-          UserWorkExpEndDate: res?.UserWorkExpEndDate
-            ? (res.UserWorkExpEndDate as unknown as Timestamp)
-            : null,
-          UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-          UserWorkExpAchievements: res.UserWorkExpAchievements || [],
-        };
-      });
+      workExpDetails
+        .filter(
+          (res) =>
+            res.UserWorkExpJobTitle &&
+            res.UserWorkExpCompanyName &&
+            res.UserWorkExpStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserWorkExpStartDate:
+              res.UserWorkExpStartDate as unknown as Timestamp,
+            UserWorkExpEndDate: res?.UserWorkExpEndDate
+              ? (res.UserWorkExpEndDate as unknown as Timestamp)
+              : null,
+            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
+            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
+          };
+        });
 
-    const projects: IUserProfileProjectsDetails[] = UserProfileProjects.map(
-      (res) => {
+    const projects: IUserProfileProjectsDetails[] = projectDetails
+      .filter((res) => res.UserProjectTitle && res.UserProjectDescription)
+      .map((res) => {
         return {
           ...res,
           UserProjectStartDate: res.UserProjectStartDate
@@ -138,19 +170,26 @@ class DbUser {
             ? (res.UserProjectEndDate as unknown as Timestamp)
             : null,
         };
-      }
-    );
+      });
 
-    const certification = UserProfileCertifications.map((res) => {
-      return {
-        ...res,
-        UserCertificateIssueDate:
-          res.UserCertificateIssueDate as unknown as Timestamp,
-        UserCertificateExpiryDate: res.UserCertificateExpiryDate
-          ? (res.UserCertificateExpiryDate as unknown as Timestamp)
-          : null,
-      };
-    });
+    const certification: IUserProfileCertificationsDetails[] =
+      certificationDetails
+        .filter(
+          (res) =>
+            res.UserCertificateName &&
+            res.UserCertificateIssuedBy &&
+            res.UserCertificateIssueDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserCertificateIssueDate:
+              res.UserCertificateIssueDate as unknown as Timestamp,
+            UserCertificateExpiryDate: res.UserCertificateExpiryDate
+              ? (res.UserCertificateExpiryDate as unknown as Timestamp)
+              : null,
+          };
+        });
 
     const newUserProfile: IUserProfilesCollection = {
       UserProfileId: userProfileId,
@@ -158,12 +197,17 @@ class DbUser {
       UserProfilePersonalDetails: profileDetails,
       UserProfileEducationDetails: educationalDetails,
       UserProfileWorkExperience: workExperience,
-      UserProfileSkills: UserProfileSkills || [],
+      UserProfileSkills: skillsDetails.filter(
+        (s) => s.UserSkillName && s.UserSkillProficiency
+      ),
       UserProfileProjects: projects,
       UserProfileCertifications: certification,
-      UserProfileLanguages: UserProfileLanguages || [],
-      UserProfileHobbies: UserProfileHobbies || [],
-      UserProfileCustomSections: UserProfileCustomSections || [],
+      UserProfileLanguages: UserProfileLanguages.filter((s) => s),
+      UserProfileHobbies: UserProfileHobbies.filter((s) => s),
+      UserProfileCustomSections: customDetails.filter(
+        (s) =>
+          s.UserProfileCustomSectionContent && s.UserProfileCustomSectionTitle
+      ),
       UserProfileCreatedAt: serverTimestamp(),
       UserProfileModifiedAt: serverTimestamp(),
     };
@@ -171,22 +215,31 @@ class DbUser {
     return setDoc(docRef, newUserProfile);
   };
 
-  static updateUserProfile = (
-    data: UserProfileCreateFormFields,
-    userProfileId: string
-  ) => {
+  static updateUserProfile = ({
+    data,
+    userProfileId,
+    certificationDetails,
+    customDetails,
+    educationDetails,
+    projectDetails,
+    skillsDetails,
+    workExpDetails,
+  }: {
+    data: UserProfileCreateFormFields;
+    userProfileId: string;
+    educationDetails: UserProfileEducationDetailsChildCollection[];
+    workExpDetails: UserProfileWorkExperienceChildCollection[];
+    skillsDetails: IUserProfileSkillsChildCollection[];
+    projectDetails: UserProfileProjectsDetails[];
+    certificationDetails: UserProfileCertificationsDetails[];
+    customDetails: IUserProfileCustomSections[];
+  }) => {
     const docRef = doc(db, CollectionName.userProfiles, userProfileId);
 
     const {
-      UserProfileCertifications,
-      UserProfileCustomSections,
-      UserProfileEducationDetails,
-      UserProfileHobbies,
-      UserProfileLanguages,
       UserProfilePersonalDetails,
-      UserProfileProjects,
-      UserProfileSkills,
-      UserProfileWorkExperience,
+      UserProfileLanguages,
+      UserProfileHobbies,
     } = data;
 
     const profileDetails: IUserProfilePersonalDetails = {
@@ -197,32 +250,48 @@ class DbUser {
     };
 
     const educationalDetails: IUserProfileEducationDetailsChildCollection[] =
-      UserProfileEducationDetails.map((res) => {
-        return {
-          ...res,
-          UserEducationEndDate:
-            res.UserEducationEndDate as unknown as Timestamp,
-          UserEducationStartDate:
-            res.UserEducationStartDate as unknown as Timestamp,
-        };
-      });
+      educationDetails
+        .filter(
+          (res) =>
+            res.UserEducationDegree &&
+            res.UserEducationEndDate &&
+            res.UserEducationInstitution &&
+            res.UserEducationStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserEducationEndDate:
+              res.UserEducationEndDate as unknown as Timestamp,
+            UserEducationStartDate:
+              res.UserEducationStartDate as unknown as Timestamp,
+          };
+        });
 
     const workExperience: IUserProfileWorkExperienceChildCollection[] =
-      UserProfileWorkExperience.map((res) => {
-        return {
-          ...res,
-          UserWorkExpStartDate:
-            res.UserWorkExpStartDate as unknown as Timestamp,
-          UserWorkExpEndDate: res?.UserWorkExpEndDate
-            ? (res.UserWorkExpEndDate as unknown as Timestamp)
-            : null,
-          UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-          UserWorkExpAchievements: res.UserWorkExpAchievements || [],
-        };
-      });
+      workExpDetails
+        .filter(
+          (res) =>
+            res.UserWorkExpJobTitle &&
+            res.UserWorkExpCompanyName &&
+            res.UserWorkExpStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserWorkExpStartDate:
+              res.UserWorkExpStartDate as unknown as Timestamp,
+            UserWorkExpEndDate: res?.UserWorkExpEndDate
+              ? (res.UserWorkExpEndDate as unknown as Timestamp)
+              : null,
+            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
+            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
+          };
+        });
 
-    const projects: IUserProfileProjectsDetails[] = UserProfileProjects.map(
-      (res) => {
+    const projects: IUserProfileProjectsDetails[] = projectDetails
+      .filter((res) => res.UserProjectTitle && res.UserProjectDescription)
+      .map((res) => {
         return {
           ...res,
           UserProjectStartDate: res.UserProjectStartDate
@@ -232,34 +301,58 @@ class DbUser {
             ? (res.UserProjectEndDate as unknown as Timestamp)
             : null,
         };
-      }
-    );
+      });
 
-    const certification = UserProfileCertifications.map((res) => {
-      return {
-        ...res,
-        UserCertificateIssueDate:
-          res.UserCertificateIssueDate as unknown as Timestamp,
-        UserCertificateExpiryDate: res.UserCertificateExpiryDate
-          ? (res.UserCertificateExpiryDate as unknown as Timestamp)
-          : null,
-      };
-    });
+    const certification: IUserProfileCertificationsDetails[] =
+      certificationDetails
+        .filter(
+          (res) =>
+            res.UserCertificateName &&
+            res.UserCertificateIssuedBy &&
+            res.UserCertificateIssueDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserCertificateIssueDate:
+              res.UserCertificateIssueDate as unknown as Timestamp,
+            UserCertificateExpiryDate: res.UserCertificateExpiryDate
+              ? (res.UserCertificateExpiryDate as unknown as Timestamp)
+              : null,
+          };
+        });
 
     const newUserProfile: Partial<IUserProfilesCollection> = {
+      UserProfileId: userProfileId,
       UserProfilePersonalDetails: profileDetails,
       UserProfileEducationDetails: educationalDetails,
       UserProfileWorkExperience: workExperience,
-      UserProfileSkills: UserProfileSkills || [],
+      UserProfileSkills: skillsDetails.filter(
+        (s) => s.UserSkillName && s.UserSkillProficiency
+      ),
       UserProfileProjects: projects,
       UserProfileCertifications: certification,
-      UserProfileLanguages: UserProfileLanguages || [],
-      UserProfileHobbies: UserProfileHobbies || [],
-      UserProfileCustomSections: UserProfileCustomSections || [],
+      UserProfileLanguages: UserProfileLanguages.filter((s) => s),
+      UserProfileHobbies: UserProfileHobbies.filter((s) => s),
+      UserProfileCustomSections: customDetails.filter(
+        (s) =>
+          s.UserProfileCustomSectionContent && s.UserProfileCustomSectionTitle
+      ),
       UserProfileModifiedAt: serverTimestamp(),
     };
 
     return updateDoc(docRef, newUserProfile);
+  };
+
+  static getUserProfile = (authUserId: string) => {
+    const docRef = collection(db, CollectionName.userProfiles);
+    const docQuery = query(
+      docRef,
+      where("UserProfileUserId", "==", authUserId),
+      limit(1)
+    );
+
+    return getDocs(docQuery);
   };
 }
 

@@ -20,17 +20,51 @@ import Certifications, {
   UserProfileCertificationsDetails,
 } from "../../../component/user/profile/Certifications";
 import CustomDetails from "../../../component/user/profile/CustomDetails";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IUserProfileCustomSections,
+  IUserProfilesCollection,
   IUserProfileSkillsChildCollection,
 } from "../../../@types/database";
 import SkillsDetail from "../../../component/user/profile/SkillsDetail";
 import OtherDetails from "../../../component/user/profile/OtherDetails";
+import { errorHandler } from "../../../utilities/CustomError";
+import { useAuthState, useUIState } from "../../../store";
+import DbUser from "../../../firebase/DB/DbUser";
+import { toDate } from "../../../utilities/misc";
+import { showSnackbar } from "../../../utilities/TsxUtils";
 
 const Profile = () => {
+  const { setLoading } = useUIState();
+
+  const { authUser, userProfile, setUserProfile } = useAuthState();
+
+  const isEdit = !!userProfile;
+
   const methods = useForm<UserProfileCreateFormFields>({
     resolver: zodResolver(userProfileCreateSchema),
+    defaultValues: isEdit
+      ? {
+          UserProfilePersonalDetails: {
+            UserAddress:
+              userProfile.UserProfilePersonalDetails.UserAddress || "",
+            UserDateOfBirth: userProfile.UserProfilePersonalDetails
+              .UserDateOfBirth
+              ? toDate(userProfile.UserProfilePersonalDetails.UserDateOfBirth)
+              : null,
+            UserEmail: userProfile.UserProfilePersonalDetails.UserEmail || "",
+            UserFullName:
+              userProfile.UserProfilePersonalDetails.UserFullName || "",
+            UserGitHub: userProfile.UserProfilePersonalDetails.UserGitHub || "",
+            UserLinkedIn: userProfile.UserProfilePersonalDetails.UserLinkedIn,
+            UserPhone: userProfile.UserProfilePersonalDetails.UserPhone || "",
+            UserWebsite:
+              userProfile.UserProfilePersonalDetails.UserWebsite || "",
+          },
+          UserProfileHobbies: userProfile.UserProfileHobbies || [],
+          UserProfileLanguages: userProfile.UserProfileLanguages || [],
+        }
+      : undefined,
   });
 
   //Education Details
@@ -106,11 +140,109 @@ const Profile = () => {
   ]);
 
   const onSubmit = async (data: UserProfileCreateFormFields) => {
-    console.log(data);
+    console.log(data, "data here");
+    if (!authUser) return;
+    try {
+      setLoading(true);
+      if (isEdit) {
+        await DbUser.updateUserProfile({
+          data,
+          userProfileId: userProfile.UserProfileId,
+          certificationDetails: certificationsDetail,
+          customDetails,
+          educationDetails,
+          projectDetails,
+          skillsDetails,
+          workExpDetails,
+        });
+        showSnackbar({
+          message: "Profile updated successfully",
+          type: "success",
+        });
+      } else {
+        await DbUser.createUserProfile({
+          data,
+          userId: authUser.AuthUserId,
+          certificationDetails: certificationsDetail,
+          customDetails,
+          educationDetails,
+          projectDetails,
+          skillsDetails,
+          workExpDetails,
+        });
+        showSnackbar({
+          message: "Profile created successfully",
+          type: "success",
+        });
+      }
+
+      const userProfileSnapshot = await DbUser.getUserProfile(
+        authUser.AuthUserId
+      );
+      const userProfileData =
+        userProfileSnapshot.docs[0]?.data() as IUserProfilesCollection;
+      setUserProfile(userProfileData);
+
+      setLoading(false);
+    } catch (error) {
+      errorHandler(error);
+      console.log(error);
+      setLoading(false);
+    }
   };
 
-  //console errors
-  console.log(methods.formState.errors.UserProfilePersonalDetails);
+  useEffect(() => {
+    if (isEdit) {
+      setCertificationsDetail(
+        userProfile.UserProfileCertifications.map((res) => {
+          return {
+            ...res,
+            UserCertificateExpiryDate: res.UserCertificateExpiryDate
+              ? toDate(res.UserCertificateExpiryDate)
+              : null,
+            UserCertificateIssueDate: toDate(res.UserCertificateIssueDate),
+          };
+        })
+      );
+      setCustomDetails(userProfile.UserProfileCustomSections);
+      setEducationDetails(
+        userProfile.UserProfileEducationDetails?.map((res) => {
+          return {
+            ...res,
+            UserEducationStartDate: toDate(res.UserEducationStartDate),
+            UserEducationEndDate: toDate(res.UserEducationEndDate),
+          };
+        })
+      );
+      setProjectDetails(
+        userProfile.UserProfileProjects.map((res) => {
+          return {
+            ...res,
+            UserProjectEndDate: res.UserProjectEndDate
+              ? toDate(res.UserProjectEndDate)
+              : null,
+            UserProjectStartDate: res.UserProjectStartDate
+              ? toDate(res.UserProjectStartDate)
+              : null,
+          };
+        })
+      );
+      setSkillsDetails(userProfile.UserProfileSkills);
+      setWorkExpDetails(
+        userProfile.UserProfileWorkExperience.map((res) => {
+          return {
+            ...res,
+            UserWorkExpEndDate: res.UserWorkExpEndDate
+              ? toDate(res.UserWorkExpEndDate)
+              : null,
+            UserWorkExpStartDate: toDate(res.UserWorkExpStartDate),
+          };
+        })
+      );
+    }
+  }, [isEdit]);
+
+  console.log(methods.formState.errors);
 
   return (
     <FormProvider {...methods}>
@@ -145,7 +277,7 @@ const Profile = () => {
             setCustomDetails={setCustomDetails}
           />
         </div>
-        <Footer />
+        <Footer buttonTitle={isEdit ? "Update" : "Save"} />
       </form>
     </FormProvider>
   );
