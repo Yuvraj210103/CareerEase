@@ -12,10 +12,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/config";
 import DbUser from "../firebase/DB/DbUser";
-import { IAuthUsersCollection } from "../@types/database";
+import {
+  IAuthUsersCollection,
+  IUserProfilesCollection,
+} from "../@types/database";
 
 const useOnAuthStateChanged = () => {
-  const { setAuthUser, setLoading } = useAuthState();
+  const { setAuthUser, setUserProfile, setLoading } = useAuthState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,11 +69,22 @@ const useOnAuthStateChanged = () => {
 
         const loggedInUserData = loggedInUserDoc.docs[0].data();
 
+        //*Fetch auth user
         const snapshot = await DbUser.getAuthUser(
           loggedInUserData.LoggedInUserId
         );
         const user = snapshot.data() as IAuthUsersCollection;
         setAuthUser(user);
+
+        //*fetch user profile
+        const userProfileSnapshot = await DbUser.getUserProfile(
+          loggedInUserData.LoggedInUserId
+        );
+        const userProfile =
+          userProfileSnapshot.docs[0]?.data() as IUserProfilesCollection;
+        setUserProfile(userProfile);
+
+        //Navigate to authenticated pages
         if (!location.pathname.includes("/user")) {
           navigate(PageRoutes.USER_HOME);
         }

@@ -343,6 +343,17 @@ class DbUser {
 
     return updateDoc(docRef, newUserProfile);
   };
+
+  static getUserProfile = (authUserId: string) => {
+    const docRef = collection(db, CollectionName.userProfiles);
+    const docQuery = query(
+      docRef,
+      where("UserProfileUserId", "==", authUserId),
+      limit(1)
+    );
+
+    return getDocs(docQuery);
+  };
 }
 
 export default DbUser;
