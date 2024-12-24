@@ -1,4 +1,4 @@
-export const template1 = () => {
+const template1 = () => {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,3 +69,5 @@ export const template1 = () => {
 </body>
 </html>`;
 };
+
+export default template1;

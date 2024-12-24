@@ -1,4 +1,4 @@
-import { template1 } from "../../../utilities/resume_templates/Template1";
+import template1 from "../../../utilities/resume_templates/template1";
 
 const ResumeTemplates = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
