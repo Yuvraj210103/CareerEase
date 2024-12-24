@@ -23,6 +23,7 @@ import CustomDetails from "../../../component/user/profile/CustomDetails";
 import { useEffect, useState } from "react";
 import {
   IUserProfileCustomSections,
+  IUserProfilesCollection,
   IUserProfileSkillsChildCollection,
 } from "../../../@types/database";
 import SkillsDetail from "../../../component/user/profile/SkillsDetail";
@@ -36,7 +37,7 @@ import { showSnackbar } from "../../../utilities/TsxUtils";
 const Profile = () => {
   const { setLoading } = useUIState();
 
-  const { authUser, userProfile } = useAuthState();
+  const { authUser, userProfile, setUserProfile } = useAuthState();
 
   const isEdit = !!userProfile;
 
@@ -174,6 +175,14 @@ const Profile = () => {
           type: "success",
         });
       }
+
+      const userProfileSnapshot = await DbUser.getUserProfile(
+        authUser.AuthUserId
+      );
+      const userProfileData =
+        userProfileSnapshot.docs[0]?.data() as IUserProfilesCollection;
+      setUserProfile(userProfileData);
+
       setLoading(false);
     } catch (error) {
       errorHandler(error);
