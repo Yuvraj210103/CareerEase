@@ -21,6 +21,7 @@ import UserHome from "./pages/user/home/Home";
 import Home from "./pages/home/Home";
 import Profile from "./pages/user/profile/Profile";
 import { useShowLoader } from "./hooks/useShowLoader";
+import ResumeTemplates from "./pages/user/resume_templates/ResumeTemplates";
 
 function App() {
   const { authUser, loading } = useAuthState();
@@ -48,6 +49,10 @@ function App() {
             <Routes>
               <Route path={PageRoutes.USER_HOME} Component={UserHome} />
               <Route path={PageRoutes.USER_PROFILE} Component={Profile} />
+              <Route
+                path={PageRoutes.USER_RESUME_TEMPLATES}
+                Component={ResumeTemplates}
+              />
             </Routes>
           </UserPageLayout>
         </ModalsProvider>
