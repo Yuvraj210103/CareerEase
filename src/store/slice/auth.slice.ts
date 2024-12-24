@@ -34,7 +34,7 @@ export const createAuthSlice: StateCreator<AuthState> = (set) => ({
     if (loggedInUser) {
       set((state) => ({
         ...state,
-        user: null,
+        authUser: null,
         company: null,
         client: null,
         superuser: null,
