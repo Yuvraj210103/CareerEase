@@ -16,6 +16,7 @@ import { db } from "../config";
 import CustomError from "../../utilities/CustomError";
 import {
   IAuthUsersCollection,
+  IUserProfileCertificationsDetails,
   IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
@@ -117,32 +118,48 @@ class DbUser {
     };
 
     const educationalDetails: IUserProfileEducationDetailsChildCollection[] =
-      educationDetails.map((res) => {
-        return {
-          ...res,
-          UserEducationEndDate:
-            res.UserEducationEndDate as unknown as Timestamp,
-          UserEducationStartDate:
-            res.UserEducationStartDate as unknown as Timestamp,
-        };
-      });
+      educationDetails
+        .filter(
+          (res) =>
+            res.UserEducationDegree &&
+            res.UserEducationEndDate &&
+            res.UserEducationInstitution &&
+            res.UserEducationStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserEducationEndDate:
+              res.UserEducationEndDate as unknown as Timestamp,
+            UserEducationStartDate:
+              res.UserEducationStartDate as unknown as Timestamp,
+          };
+        });
 
     const workExperience: IUserProfileWorkExperienceChildCollection[] =
-      workExpDetails.map((res) => {
-        return {
-          ...res,
-          UserWorkExpStartDate:
-            res.UserWorkExpStartDate as unknown as Timestamp,
-          UserWorkExpEndDate: res?.UserWorkExpEndDate
-            ? (res.UserWorkExpEndDate as unknown as Timestamp)
-            : null,
-          UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-          UserWorkExpAchievements: res.UserWorkExpAchievements || [],
-        };
-      });
+      workExpDetails
+        .filter(
+          (res) =>
+            res.UserWorkExpJobTitle &&
+            res.UserWorkExpCompanyName &&
+            res.UserWorkExpStartDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserWorkExpStartDate:
+              res.UserWorkExpStartDate as unknown as Timestamp,
+            UserWorkExpEndDate: res?.UserWorkExpEndDate
+              ? (res.UserWorkExpEndDate as unknown as Timestamp)
+              : null,
+            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
+            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
+          };
+        });
 
-    const projects: IUserProfileProjectsDetails[] = projectDetails.map(
-      (res) => {
+    const projects: IUserProfileProjectsDetails[] = projectDetails
+      .filter((res) => res.UserProjectTitle && res.UserProjectDescription)
+      .map((res) => {
         return {
           ...res,
           UserProjectStartDate: res.UserProjectStartDate
@@ -152,19 +169,26 @@ class DbUser {
             ? (res.UserProjectEndDate as unknown as Timestamp)
             : null,
         };
-      }
-    );
+      });
 
-    const certification = certificationDetails.map((res) => {
-      return {
-        ...res,
-        UserCertificateIssueDate:
-          res.UserCertificateIssueDate as unknown as Timestamp,
-        UserCertificateExpiryDate: res.UserCertificateExpiryDate
-          ? (res.UserCertificateExpiryDate as unknown as Timestamp)
-          : null,
-      };
-    });
+    const certification: IUserProfileCertificationsDetails[] =
+      certificationDetails
+        .filter(
+          (res) =>
+            res.UserCertificateName &&
+            res.UserCertificateIssuedBy &&
+            res.UserCertificateIssueDate
+        )
+        .map((res) => {
+          return {
+            ...res,
+            UserCertificateIssueDate:
+              res.UserCertificateIssueDate as unknown as Timestamp,
+            UserCertificateExpiryDate: res.UserCertificateExpiryDate
+              ? (res.UserCertificateExpiryDate as unknown as Timestamp)
+              : null,
+          };
+        });
 
     const newUserProfile: IUserProfilesCollection = {
       UserProfileId: userProfileId,
@@ -172,12 +196,17 @@ class DbUser {
       UserProfilePersonalDetails: profileDetails,
       UserProfileEducationDetails: educationalDetails,
       UserProfileWorkExperience: workExperience,
-      UserProfileSkills: skillsDetails,
+      UserProfileSkills: skillsDetails.filter(
+        (s) => s.UserSkillName && s.UserSkillProficiency
+      ),
       UserProfileProjects: projects,
       UserProfileCertifications: certification,
-      UserProfileLanguages,
-      UserProfileHobbies,
-      UserProfileCustomSections: customDetails || [],
+      UserProfileLanguages: UserProfileLanguages.filter((s) => s),
+      UserProfileHobbies: UserProfileHobbies.filter((s) => s),
+      UserProfileCustomSections: customDetails.filter(
+        (s) =>
+          s.UserProfileCustomSectionContent && s.UserProfileCustomSectionTitle
+      ),
       UserProfileCreatedAt: serverTimestamp(),
       UserProfileModifiedAt: serverTimestamp(),
     };

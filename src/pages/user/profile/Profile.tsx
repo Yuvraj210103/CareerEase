@@ -28,7 +28,6 @@ import {
 import SkillsDetail from "../../../component/user/profile/SkillsDetail";
 import OtherDetails from "../../../component/user/profile/OtherDetails";
 import { errorHandler } from "../../../utilities/CustomError";
-import { isUserProfileFormInvalid } from "../../../utilities/profileCreateHelper";
 import { useAuthState, useUIState } from "../../../store";
 import DbUser from "../../../firebase/DB/DbUser";
 
@@ -118,14 +117,14 @@ const Profile = () => {
     if (!user) return;
     try {
       setLoading(true);
-      isUserProfileFormInvalid({
+      /* isUserProfileFormInvalid({
         certificationDetails: certificationsDetail,
         customDetails,
         educationDetails,
         projectDetails,
         skillsDetails,
         workExpDetails,
-      });
+      }); */
       await DbUser.createUserProfile({
         data,
         userId: user.AuthUserId,
@@ -145,7 +144,7 @@ const Profile = () => {
   };
 
   //console errors
-  console.log(methods.formState.errors);
+  //console.log(methods.formState.errors);
 
   return (
     <FormProvider {...methods}>
