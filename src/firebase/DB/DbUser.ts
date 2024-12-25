@@ -153,8 +153,6 @@ class DbUser {
             UserWorkExpEndDate: res?.UserWorkExpEndDate
               ? (res.UserWorkExpEndDate as unknown as Timestamp)
               : null,
-            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
           };
         });
 
@@ -284,8 +282,6 @@ class DbUser {
             UserWorkExpEndDate: res?.UserWorkExpEndDate
               ? (res.UserWorkExpEndDate as unknown as Timestamp)
               : null,
-            UserWorkExpResponsibilities: res.UserWorkExpResponsibilities || [],
-            UserWorkExpAchievements: res.UserWorkExpAchievements || [],
           };
         });
 

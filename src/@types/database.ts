@@ -45,8 +45,8 @@ export interface IUserProfileWorkExperienceChildCollection {
   UserWorkExpCompanyName: string;
   UserWorkExpStartDate: Timestamp | FieldValue;
   UserWorkExpEndDate?: Timestamp | FieldValue | null;
-  UserWorkExpResponsibilities: string[];
-  UserWorkExpAchievements: string[];
+  UserWorkExpDescription?: string;
+  UserWorkExpLocation: string;
 }
 
 export interface IUserProfileSkillsChildCollection {

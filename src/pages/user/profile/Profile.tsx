@@ -88,12 +88,12 @@ const Profile = () => {
     UserProfileWorkExperienceChildCollection[]
   >([
     {
-      UserWorkExpAchievements: [],
+      UserWorkExpDescription: "",
+      UserWorkExpLocation: "",
       UserWorkExpCompanyName: "",
       UserWorkExpStartDate: null as unknown as Date,
       UserWorkExpEndDate: null as unknown as Date,
       UserWorkExpJobTitle: "",
-      UserWorkExpResponsibilities: [],
     },
   ]);
 

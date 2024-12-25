@@ -1,5 +1,7 @@
 import {
+  IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
+  IUserProfileProjectsDetails,
   IUserProfileSkillsChildCollection,
   IUserProfileWorkExperienceChildCollection,
 } from "../../@types/database";
@@ -8,7 +10,11 @@ import { TemplateArgs } from "./TemplateGenerate";
 
 const template1 = ({ UserProfile }: TemplateArgs) => {
   const personalDetails = (personalDetails: IUserProfilePersonalDetails) => {
-    const html = `<div><h3>${personalDetails.UserFullName}</h3>
+    const html = `<div>
+     <div style="font-size:18px; font-weight:600;">${
+       personalDetails.UserFullName
+     }</div>
+    
     <hr>
     <p>${personalDetails?.UserPhone || ""}  <a href="mailto:${
       personalDetails?.UserEmail || ""
@@ -21,7 +27,7 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
   const summary = (summary: string | null) => {
     const html = `
     <div>
-        <h3>Summary</h3>
+        <div style="font-size:18px; font-weight:600;">Summary</div>
         <hr>
         <p>
           ${summary}
@@ -33,7 +39,7 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
 
   const skills = (skills: IUserProfileSkillsChildCollection[]) => {
     const html = `<div>
-        <h3>Technical Skills</h3>
+    <div style="font-size:18px; font-weight:600;">Technical Skills</div>
         <hr>
         <p>${skills.map((s) => s.UserSkillName).join(" , ")}</p>
     </div>`;
@@ -45,23 +51,26 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
     workExp: IUserProfileWorkExperienceChildCollection[]
   ) => {
     const html = ` <div>
-        <h3>Relevant Experience</h3>
+       
+    <div style="font-size:18px; font-weight:600;">Relevant Experience</div>
+
         <hr>
         ${workExp
           .map(
-            (res) => `<p> <strong>${
+            (res) => `<p> <span style="font-size:16px; font-weight:600;">${
               res.UserWorkExpCompanyName
-            } | Bangalore, Maharashtra</strong><br>
-        <strong>${res.UserWorkExpJobTitle} | ${formatDate(
-              res.UserWorkExpStartDate,
-              "MM/YYYY"
-            )} - ${
+            } | ${
+              res?.UserWorkExpLocation ? res.UserWorkExpLocation : ""
+            }</span><br>
+        <span style="font-size:16px; font-weight:600;">${
+          res.UserWorkExpJobTitle
+        } | ${formatDate(res.UserWorkExpStartDate, "MM/YYYY")} - ${
               res.UserWorkExpEndDate
                 ? formatDate(res.UserWorkExpEndDate, "MM/YYYY")
                 : "Working"
-            }</strong><br> I crafted Nearbuck's website and developed their core offerings – intuitive billing and accounting software.
-        My role aimed at enhancing their digital footprint and delivering efficient solutions for seamless business
-        operations.
+            }</span><br> ${
+              res?.UserWorkExpDescription ? res.UserWorkExpDescription : ""
+            }
         </p>`
           )
           .join("")}
@@ -71,11 +80,113 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
     return html;
   };
 
+  const projectDetails = (projects: IUserProfileProjectsDetails[]) => {
+    const html = `<div>
+        <div style="font-size:18px; font-weight:600;">Projects</div>
+        <hr>
+        
+        ${projects
+          .map(
+            (res) =>
+              `<div>
+                <p style="display:flex; flex-direction:column;">
+                  <span style="font-size:16px; font-weight:600;">
+                      ${res.UserProjectTitle}:
+                  </span>
+                  <span style="margin-top:8px;">
+                    ${res.UserProjectDescription}
+                  </span> 
+                </p>
+               </div>`
+          )
+          .join("")}
+            
+    </div>`;
+
+    return projects.length > 0 ? html : "";
+  };
+
+  const educationDetails = (
+    education: IUserProfileEducationDetailsChildCollection[]
+  ) => {
+    const html = `<div>
+          <div style="font-size:18px; font-weight:600;">Education</div>
+            <hr>
+
+            ${education
+              .map(
+                (res) => `<p> 
+                <span style="font-size:16px; font-weight:600;">${
+                  res.UserEducationInstitution
+                }</span>
+
+                <br>
+
+                <span style="font-size:16px; font-weight:600;">
+                ${res.UserEducationDegree} | ${formatDate(
+                  res.UserEducationStartDate,
+                  "MM/YYYY"
+                )} - ${formatDate(res.UserEducationEndDate, "MM/YYYY")}</span>
+                <br>
+                <span style="font-size:16px; font-weight:600;">
+                Grade:  ${res.UserEducationGrade}
+                </span>
+
+                <br>
+                ${
+                  res.UserEducationDescription
+                    ? res.UserEducationDescription
+                    : ""
+                }
+
+            </p>`
+              )
+              .join("")}
+
+           
+
+        </div>`;
+
+    return html;
+  };
+
+  const usefulLinks = (personalDetails: IUserProfilePersonalDetails) => {
+    const html = `<div>
+             <div style="font-size:18px; font-weight:600;">Useful Links</div>
+            <hr>
+            <span>
+            ${
+              personalDetails.UserWebsite
+                ? `<span style="font-size:16px; font-weight:600;">Portfolio website:</span> <a href="${personalDetails.UserWebsite}">${personalDetails.UserWebsite}</a></span>`
+                : ""
+            }  <br><br>
+            ${
+              personalDetails.UserLinkedIn
+                ? `<span style="font-size:16px; font-weight:600;">LinkedIn:</span> <a href="${personalDetails.UserLinkedIn}">${personalDetails.UserLinkedIn}</a></span>`
+                : ""
+            }<br><br>
+           ${
+             personalDetails.UserGitHub
+               ? `<span style="font-size:16px; font-weight:600;">Github:</span> <a href="${personalDetails.UserGitHub}">${personalDetails.UserGitHub}</a></span>`
+               : ""
+           }
+        </div>`;
+
+    return html;
+  };
+
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding:20px;
+          }
+        </style>
     <title>${UserProfile.UserProfilePersonalDetails.UserFullName}</title>
 </head>
 <body>
@@ -86,46 +197,12 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
     ${skills(UserProfile.UserProfileSkills)}
 
     ${workExperience(UserProfile.UserProfileWorkExperience)}
-    <div>
-        <h3>Relevant Experience</h3>
-        <hr>
-        <p> <strong>Nearbuck Technologies | Bangalore, Maharashtra</strong><br>
-        <strong>Full Stack Developer | 12/2022 - 06/2024</strong><br> I crafted Nearbuck's website and developed their core offerings – intuitive billing and accounting software.
-        My role aimed at enhancing their digital footprint and delivering efficient solutions for seamless business
-        operations.
-        </p>
-    </div>
-    <div>
-        <h3>Projects</h3>
-        <hr>
-        <p><strong>Attendance Management System with Location-Based QR Verification:</strong><br>Developed a web application for efficient attendance tracking, featuring class, student, and faculty
-            management. Implemented QR code-based attendance marking with location validation to ensure
-            in-class presence, enabling secure, real-time session tracking for administrators and faculty.
-            </p>
-            <div>
-                <p><strong>Cloud-based Notebook (MERN Stack):</strong><br>Developed a dynamic notebook application using the MERN stack, seamlessly integrating MongoDB,
-                    Express, React.js, and Node.js. This project enables users to store and access notes securely in the
-                    cloud, combining functionality with a sleek user interface.                    
-                    </p>
-            </div>
-    </div>
-    
-        <div>
-            <h3>Education</h3>
-            <hr>
-            <p> <strong>K.P.B Hinduja College | Mumbai, Maharashtra</strong><br>
-            <strong>Bachelor of Computer Application | 08/2024</strong><br>I have graduated with a Bachelor's degree in Computer Applications (BCA), where I have acquired
-            comprehensive knowledge in programming, software development, and IT essentials
-            </p>
-        </div>
 
-        <div>
-            <h3>Useful Links</h3>
-            <hr>
-            <span><strong>Portfolio website:</strong> <a href="https://yuvraj21.vercel.app"> https://yuvraj21.vercel.app</a></span><br><br>
-            <span><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/yuvraj-singh-972877222/"> https://www.linkedin.com/in/yuvraj-singh-972877222/</a></span><br><br>
-            <span><strong>Github:</strong> <a href=" https://github.com/Yuvraj210103"> https://github.com/Yuvraj210103</a></span>
-        </div>
+    ${projectDetails(UserProfile.UserProfileProjects)}
+   
+    ${educationDetails(UserProfile.UserProfileEducationDetails)}
+
+    ${usefulLinks(UserProfile.UserProfilePersonalDetails)}
     
     
 </body>
