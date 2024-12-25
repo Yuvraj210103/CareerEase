@@ -20,7 +20,7 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
       personalDetails?.UserEmail || ""
     }">| ${personalDetails?.UserEmail || ""}</a> | ${
       personalDetails?.UserAddress || "" || ""
-    }</p></div>`;
+    } </p></div>`;
     return html;
   };
 
