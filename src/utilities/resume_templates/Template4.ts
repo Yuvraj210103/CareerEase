@@ -1,4 +1,5 @@
 import {
+  IUserProfileCertificationsDetails,
   IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
@@ -9,23 +10,23 @@ import {
 import { formatDate } from "../misc";
 import { TemplateArgs } from "./TemplateGenerate";
 
-const template2 = ({ UserProfile }: TemplateArgs) => {
+const template4 = ({ UserProfile }: TemplateArgs) => {
   const personalDetails = (personalDetails: IUserProfilePersonalDetails) => {
-    const html = `<div>
-      <div style="font-size:22px; font-weight:bold;">${
+    const html = `<div style="text-align:center; background-color:#f0f8ff; padding:10px; border-radius:10px;">
+      <div style="font-size:28px; font-weight:bold;">${
         personalDetails.UserFullName
       }</div>
-      <p style="margin:5px 0;">${personalDetails.UserPhone} | <a href="mailto:${
+      <p>${personalDetails.UserPhone} | <a href="mailto:${
       personalDetails.UserEmail
-    }">${personalDetails.UserEmail}</a></p>
+    }" style="color:#1e90ff;">${personalDetails.UserEmail}</a></p>
       <p>${personalDetails.UserAddress || ""}</p>
     </div>`;
     return html;
   };
 
   const summary = (summary: string | null) => {
-    const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Professional Summary</div>
+    const html = `<div style="margin-top:20px;">
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Professional Summary</div>
       <hr>
       <p>${summary || ""}</p>
     </div>`;
@@ -34,9 +35,9 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
 
   const skills = (skills: IUserProfileSkillsChildCollection[]) => {
     const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Skills</div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Skills</div>
       <hr>
-      <ul style="list-style-type:circle;">
+      <ul style="list-style-type:circle; padding-left:20px;">
         ${skills
           .map(
             (s) =>
@@ -52,12 +53,12 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
     workExp: IUserProfileWorkExperienceChildCollection[]
   ) => {
     const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Work Experience</div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Work Experience</div>
       <hr>
       ${workExp
         .map(
           (res) => `<div style="margin-bottom:10px;">
-            <div style="font-size:18px; font-weight:600;">${
+            <div style="font-size:20px; font-weight:600;">${
               res.UserWorkExpJobTitle
             }</div>
             <div>${res.UserWorkExpCompanyName} | ${
@@ -78,12 +79,12 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
 
   const projectDetails = (projects: IUserProfileProjectsDetails[]) => {
     const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Projects</div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Projects</div>
       <hr>
       ${projects
         .map(
           (project) => `<div style="margin-bottom:10px;">
-            <div style="font-size:18px; font-weight:600;">${
+            <div style="font-size:20px; font-weight:600;">${
               project.UserProjectTitle
             }</div>
             <p>${project.UserProjectDescription}</p>
@@ -92,7 +93,7 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
             )}</p>
             ${
               project.UserProjectLink
-                ? `<a href="${project.UserProjectLink}">${project.UserProjectLink}</a>`
+                ? `<a href="${project.UserProjectLink}" style="color:#1e90ff;">${project.UserProjectLink}</a>`
                 : ""
             }
           </div>`
@@ -106,12 +107,12 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
     education: IUserProfileEducationDetailsChildCollection[]
   ) => {
     const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Education</div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Education</div>
       <hr>
       ${education
         .map(
           (edu) => `<div style="margin-bottom:10px;">
-            <div style="font-size:18px; font-weight:600;">${
+            <div style="font-size:20px; font-weight:600;">${
               edu.UserEducationDegree
             } - ${edu.UserEducationInstitution}</div>
             <div>${formatDate(
@@ -127,11 +128,31 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
     return html;
   };
 
+  const certifications = (certs: IUserProfileCertificationsDetails[]) => {
+    const html = `<div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Certifications</div>
+      <hr>
+      <ul style="list-style-type:circle; padding-left:20px;">
+        ${certs
+          .map(
+            (cert) =>
+              `<li>${cert.UserCertificateName} - ${formatDate(
+                cert.UserCertificateIssueDate,
+                "MM/YYYY"
+              )}</li>`
+          )
+          .join("")}
+      </ul>
+    </div>`;
+    return html;
+  };
+
   const usefulLinks = (personalDetails: IUserProfilePersonalDetails) => {
     const html = `<div>
-      <div style="font-size:20px; font-weight:600;">Useful Links</div>
+      <div style="font-size:24px; font-weight:600; color:#2e8b57;">Useful Links</div>
       <hr>
-      <div>
+      <ul>
+        <div>
         ${`<div><span style="font-weight:600">Portfolio: </span> <a href="${personalDetails.UserWebsite}" target="_blank">${personalDetails.UserWebsite}</a></div>`}
       </div><div>
         ${`<div><span style="font-weight:600">LinkedIn: </span> <a href="${personalDetails.UserLinkedIn}" target="_blank">${personalDetails.UserLinkedIn}</a></div>`}
@@ -139,6 +160,7 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
       <div>
         ${`<div><span style="font-weight:600">Github: </span> <a href="${personalDetails.UserGitHub}" target="_blank">${personalDetails.UserGitHub}</a></div>`}
       </div>
+      </ul>
     </div>`;
     return html;
   };
@@ -146,14 +168,14 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
   const customSections = (sections: IUserProfileCustomSections[]) => {
     const html = sections
       .map(
-        (section) => `<div style="margin-top:10px;">
-          <div style="font-size:20px; font-weight:600;">${section.UserProfileCustomSectionTitle}</div>
+        (section) => `<div>
+          <div style="font-size:24px; font-weight:600; color:#2e8b57;">${section.UserProfileCustomSectionTitle}</div>
           <hr>
           <p>${section.UserProfileCustomSectionContent}</p>
         </div>`
       )
       .join("");
-    return sections.length > 0 ? html : "";
+    return html;
   };
 
   const html = `<!DOCTYPE html>
@@ -166,6 +188,11 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
       font-family: Arial, sans-serif;
       padding: 20px;
       line-height: 1.6;
+      background-color: #ffffff;
+      color: #333333;
+    }
+    a {
+      text-decoration: none;
     }
   </style>
 </head>
@@ -176,7 +203,8 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
   ${workExperience(UserProfile.UserProfileWorkExperience)}
   ${projectDetails(UserProfile.UserProfileProjects)}
   ${educationDetails(UserProfile.UserProfileEducationDetails)}
-  ${usefulLinks(UserProfile.UserProfilePersonalDetails)}
+  ${certifications(UserProfile.UserProfileCertifications || [])}
+  ${usefulLinks(UserProfile.UserProfilePersonalDetails || [])}
   ${customSections(UserProfile.UserProfileCustomSections || [])}
 </body>
 </html>`;
@@ -184,4 +212,4 @@ const template2 = ({ UserProfile }: TemplateArgs) => {
   return html;
 };
 
-export default template2;
+export default template4;

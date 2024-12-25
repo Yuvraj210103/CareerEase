@@ -11,6 +11,9 @@ const templates = [
     id: "template_1",
   },
   { title: "Template 2", id: "template_2" },
+  { title: "Template 3", id: "template_3" },
+  { title: "Template 4", id: "template_4" },
+  { title: "Template 5", id: "template_5" },
 ];
 
 const ResumeTemplates = () => {
@@ -46,7 +49,7 @@ const ResumeTemplates = () => {
     if (!userProfile || !settings) return;
     const resumeHtml = templateGenerate({
       UserProfile: userProfile,
-      Settings: settings,
+      selectedTemplate,
     });
     if (!frame) {
       return;
