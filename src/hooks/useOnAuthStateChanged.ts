@@ -14,11 +14,13 @@ import { auth } from "../firebase/config";
 import DbUser from "../firebase/DB/DbUser";
 import {
   IAuthUsersCollection,
+  ISettingsCollection,
   IUserProfilesCollection,
 } from "../@types/database";
 
 const useOnAuthStateChanged = () => {
-  const { setAuthUser, setUserProfile, setLoading } = useAuthState();
+  const { setAuthUser, setUserProfile, setLoading, setSettings } =
+    useAuthState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -83,6 +85,19 @@ const useOnAuthStateChanged = () => {
         const userProfile =
           userProfileSnapshot.docs[0]?.data() as IUserProfilesCollection;
         setUserProfile(userProfile);
+
+        //*fetch user settings
+        const settingsSnapshot = await DbUser.getSettings(
+          loggedInUserData.LoggedInUserId
+        );
+        if (settingsSnapshot.empty) {
+          await DbUser.createSettings(loggedInUserData.LoggedInUserId);
+          window.location.reload();
+        } else {
+          const settings =
+            settingsSnapshot.docs[0]?.data() as ISettingsCollection;
+          setSettings(settings);
+        }
 
         //Navigate to authenticated pages
         if (!location.pathname.includes("/user")) {

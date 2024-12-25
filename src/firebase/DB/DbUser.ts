@@ -17,6 +17,7 @@ import { db } from "../config";
 import CustomError from "../../utilities/CustomError";
 import {
   IAuthUsersCollection,
+  ISettingsCollection,
   IUserProfileCertificationsDetails,
   IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
@@ -58,6 +59,33 @@ class DbUser {
       console.log(error);
       throw error;
     }
+  };
+
+  static createSettings = async (uId: string) => {
+    try {
+      const settingsId = getNewDocId(CollectionName.settings);
+      const settingsRef = doc(db, CollectionName.settings, settingsId);
+      const newSettings: ISettingsCollection = {
+        SettingId: settingsId,
+        SettingUserId: uId,
+        SettingSelectedResumeTemplate: 1,
+        SettingCreatedAt: serverTimestamp(),
+        SettingModifiedAt: serverTimestamp(),
+      };
+
+      return setDoc(settingsRef, newSettings);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  static getSettings = (uId: string) => {
+    const settingsRef = collection(db, CollectionName.settings);
+
+    const settingsQuery = query(settingsRef, where("SettingUserId", "==", uId));
+
+    return getDocs(settingsQuery);
   };
 
   static deleteUserLoggedInDoc = async (loggedInId: string) => {
