@@ -88,6 +88,14 @@ class DbUser {
     return getDocs(settingsQuery);
   };
 
+  static updateSetting = (
+    settingId: string,
+    data: Partial<ISettingsCollection>
+  ) => {
+    const settingsRef = doc(db, CollectionName.settings, settingId);
+    return updateDoc(settingsRef, data);
+  };
+
   static deleteUserLoggedInDoc = async (loggedInId: string) => {
     const loggedInRef = doc(db, CollectionName.loggedInUsers, loggedInId);
     return deleteDoc(loggedInRef);

@@ -36,8 +36,6 @@ function App() {
     return <SplashScreen />;
   }
 
-  console.log(authUser, "here");
-
   if (authUser) {
     return (
       <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
