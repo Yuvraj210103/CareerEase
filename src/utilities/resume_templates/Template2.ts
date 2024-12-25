@@ -1,91 +1,29 @@
-import {
-  IUserProfilePersonalDetails,
-  IUserProfileSkillsChildCollection,
-  IUserProfileWorkExperienceChildCollection,
-} from "../../@types/database";
-import { formatDate } from "../misc";
-import { TemplateArgs } from "./TemplateGenerate";
-
-const template1 = ({ UserProfile }: TemplateArgs) => {
-  const personalDetails = (personalDetails: IUserProfilePersonalDetails) => {
-    const html = `<div><h3>${personalDetails.UserFullName}</h3>
-    <hr>
-    <p>${personalDetails?.UserPhone || ""}  <a href="mailto:${
-      personalDetails?.UserEmail || ""
-    }">| ${personalDetails?.UserEmail || ""}</a> | ${
-      personalDetails?.UserAddress || "" || ""
-    }</p></div>`;
-    return html;
-  };
-
-  const summary = (summary: string | null) => {
-    const html = `
-    <div>
-        <h3>Summary</h3>
-        <hr>
-        <p>
-          ${summary}
-        </p>
-    </div>`;
-
-    return summary ? html : "";
-  };
-
-  const skills = (skills: IUserProfileSkillsChildCollection[]) => {
-    const html = `<div>
-        <h3>Technical Skills</h3>
-        <hr>
-        <p>${skills.map((s) => s.UserSkillName).join(" , ")}</p>
-    </div>`;
-
-    return html;
-  };
-
-  const workExperience = (
-    workExp: IUserProfileWorkExperienceChildCollection[]
-  ) => {
-    const html = ` <div>
-        <h3>Relevant Experience</h3>
-        <hr>
-        ${workExp
-          .map(
-            (res) => `<p> <strong>${
-              res.UserWorkExpCompanyName
-            } | Bangalore, Maharashtra</strong><br>
-        <strong>${res.UserWorkExpJobTitle} | ${formatDate(
-              res.UserWorkExpStartDate,
-              "MM/YYYY"
-            )} - ${
-              res.UserWorkExpEndDate
-                ? formatDate(res.UserWorkExpEndDate, "MM/YYYY")
-                : "Working"
-            }</strong><br> I crafted Nearbuck's website and developed their core offerings – intuitive billing and accounting software.
-        My role aimed at enhancing their digital footprint and delivering efficient solutions for seamless business
-        operations.
-        </p>`
-          )
-          .join("")}
-        
-    </div>`;
-
-    return html;
-  };
-
-  const html = `<!DOCTYPE html>
+const template2 = () => {
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${UserProfile.UserProfilePersonalDetails.UserFullName}</title>
+    <title>Resume Template</title>
 </head>
 <body>
-    ${personalDetails(UserProfile.UserProfilePersonalDetails)}
+    <h3>Yuvraj Singh</h3>
+    <hr>
+    <p>8624016814 | <a href="yuvrajssingh03@gmail.com">| yuvrajssingh03@gmail.com</a> | Mumbai,Maharashtra</p>
 
-    ${summary(UserProfile.UserProfilePersonalDetails.UserSummary || null)}
-    
-    ${skills(UserProfile.UserProfileSkills)}
-
-    ${workExperience(UserProfile.UserProfileWorkExperience)}
+    <div>
+        <h3>Summary</h3>
+        <hr>
+        <p>As a full-stack web developer, I work with React.js and the MERN stack, using Firebase to build apps that
+            scale and run in real-time. I have hands-on experience creating reliable, feature-packed web solutions
+            and always aim for high quality. I'm here to help bring your online projects to life with the latest tech.
+            </p>
+    </div>
+    <div>
+        <h3>Technical Skills</h3>
+        <hr>
+        <p>React.js, Next.js, HTML5, CSS3, Typescript, Javascript, Node.js, Express.js, Tailwind Css, Git, GitHub </p>
+    </div>
     <div>
         <h3>Relevant Experience</h3>
         <hr>
@@ -130,8 +68,6 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
     
 </body>
 </html>`;
-
-  return html;
 };
 
-export default template1;
+export default template2;

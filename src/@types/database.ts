@@ -23,6 +23,7 @@ export interface IUserProfilePersonalDetails {
   UserFullName: string;
   UserEmail: string;
   UserPhone: string;
+  UserSummary?: string | null;
   UserAddress?: string | null;
   UserLinkedIn?: string | null;
   UserGitHub?: string | null;
@@ -89,4 +90,14 @@ export interface IUserProfilesCollection {
   UserProfileCustomSections: IUserProfileCustomSections[];
   UserProfileCreatedAt: Timestamp | FieldValue;
   UserProfileModifiedAt: Timestamp | FieldValue;
+}
+
+//*Settings
+
+export interface ISettingsCollection {
+  SettingId: string;
+  SettingUserId: string;
+  SettingSelectedResumeTemplate: number;
+  SettingCreatedAt: Timestamp | FieldValue;
+  SettingModifiedAt: Timestamp | FieldValue;
 }

@@ -48,6 +48,8 @@ const Profile = () => {
           UserProfilePersonalDetails: {
             UserAddress:
               userProfile.UserProfilePersonalDetails.UserAddress || "",
+            UserSummary:
+              userProfile.UserProfilePersonalDetails.UserSummary || "",
             UserDateOfBirth: userProfile.UserProfilePersonalDetails
               .UserDateOfBirth
               ? toDate(userProfile.UserProfilePersonalDetails.UserDateOfBirth)

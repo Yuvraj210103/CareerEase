@@ -1,9 +1,13 @@
-import template1 from "../../../utilities/resume_templates/template1";
+import { useAuthState } from "../../../store";
+import { templateGenerate } from "../../../utilities/resume_templates/TemplateGenerate";
 
 const ResumeTemplates = () => {
+  const { userProfile } = useAuthState();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const writeHTML = (frame: any) => {
-    const resumeHtml = template1();
+    if (!userProfile) return;
+    const resumeHtml = templateGenerate({ UserProfile: userProfile });
     if (!frame) {
       return;
     }
