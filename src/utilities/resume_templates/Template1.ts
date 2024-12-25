@@ -1,4 +1,6 @@
 import {
+  IUserProfileCertificationsDetails,
+  IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
   IUserProfilePersonalDetails,
   IUserProfileProjectsDetails,
@@ -150,8 +152,37 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
     return html;
   };
 
-  const usefulLinks = (personalDetails: IUserProfilePersonalDetails) => {
+  const certificationDetails = (
+    certifications: IUserProfileCertificationsDetails[]
+  ) => {
     const html = `<div>
+          <div style="font-size:18px; font-weight:600;">Certifications</div>
+            <hr>
+
+            ${certifications
+              .map(
+                (res) => `<p> 
+                <span style="font-size:16px; font-weight:600;">${
+                  res.UserCertificateName
+                }</span> - Issued by <span style="font-size:16px; font-weight:600;">${
+                  res.UserCertificateIssuedBy
+                }</span> - ${formatDate(
+                  res.UserCertificateIssueDate,
+                  "DD/MM/YY"
+                )}
+              </p>`
+              )
+              .join("")}
+
+           
+
+        </div>`;
+
+    return html;
+  };
+
+  const usefulLinks = (personalDetails: IUserProfilePersonalDetails) => {
+    const html = `<div style="margin-top:20px;">
              <div style="font-size:18px; font-weight:600;">Useful Links</div>
             <hr>
             <span>
@@ -170,6 +201,28 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
                ? `<span style="font-size:16px; font-weight:600;">Github:</span> <a href="${personalDetails.UserGitHub}">${personalDetails.UserGitHub}</a></span>`
                : ""
            }
+        </div>`;
+
+    return html;
+  };
+
+  const customDetails = (customDetails: IUserProfileCustomSections[]) => {
+    const html = `<div style="margin-top:20px;">
+            ${customDetails
+              .map(
+                (
+                  res
+                ) => `<div style="font-size:18px; font-weight:600;">${res.UserProfileCustomSectionTitle}</div>
+            <hr>
+
+                <span>${res.UserProfileCustomSectionContent}</span>
+
+            </p>`
+              )
+              .join("")}
+
+           
+
         </div>`;
 
     return html;
@@ -202,7 +255,11 @@ const template1 = ({ UserProfile }: TemplateArgs) => {
    
     ${educationDetails(UserProfile.UserProfileEducationDetails)}
 
+    ${certificationDetails(UserProfile.UserProfileCertifications)}
+
     ${usefulLinks(UserProfile.UserProfilePersonalDetails)}
+
+    ${customDetails(UserProfile.UserProfileCustomSections)}
     
     
 </body>
