@@ -1,3 +1,4 @@
+import { IoCreateOutline } from "react-icons/io5";
 import { useAuthState } from "../../../store";
 import { templateGenerate } from "../../../utilities/resume_templates/TemplateGenerate";
 
@@ -31,11 +32,22 @@ const ResumeTemplates = () => {
           </div>
         </div>
         <div className="bg-surface h-full w-[80%] p-4">
-          <iframe
-            className="bg-surfaceLight "
-            ref={writeHTML}
-            style={{ minWidth: "100%", height: "100%" }}
-          ></iframe>
+          {userProfile ? (
+            <iframe
+              className="bg-surfaceLight "
+              ref={writeHTML}
+              style={{ minWidth: "100%", height: "100%" }}
+            ></iframe>
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <div className="flex flex-col items-center gap-2">
+                <IoCreateOutline className="text-7xl" />
+                <div className="text-textSecondary font-medium">
+                  Please create profile first to view resume templates
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

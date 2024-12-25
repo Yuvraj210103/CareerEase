@@ -126,7 +126,7 @@ const WorkExperience = ({
             <div>&nbsp;</div>
 
             <TextareaWithTopHeader
-              className={`mx-0`}
+              className={`mx-0 col-span-2`}
               label="Description"
               value={res.UserWorkExpDescription}
               onChange={(e) =>

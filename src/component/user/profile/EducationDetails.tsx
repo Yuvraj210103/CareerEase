@@ -122,7 +122,7 @@ const EducationDetails = ({
             />
 
             <TextareaWithTopHeader
-              className={`mx-0`}
+              className={`mx-0 col-span-2`}
               label="Description (Optional)"
               value={res.UserEducationDescription || ""}
               onChange={(e) =>
