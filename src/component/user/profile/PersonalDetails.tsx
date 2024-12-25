@@ -5,6 +5,7 @@ import InputDate from "../../common/inputs/InputDate";
 import { useEffect, useState } from "react";
 import { useAuthState } from "../../../store";
 import { toDate } from "../../../utilities/misc";
+import TextareaWithTopHeader from "../../common/inputs/TextareaWithTopHeader";
 
 const PersonalDetails = () => {
   const {
@@ -77,11 +78,19 @@ const PersonalDetails = () => {
           error={errors.UserProfilePersonalDetails?.UserWebsite?.message}
         />
         <InputWithTopHeader
-          className="mx-0 col-span-2"
+          className="mx-0 col-span-1"
           label="Address"
           register={register}
           name="UserProfilePersonalDetails.UserAddress"
           error={errors.UserProfilePersonalDetails?.UserAddress?.message}
+        />
+        <div>&nbsp;</div>
+        <TextareaWithTopHeader
+          className="mx-0 col-span-2"
+          label="Summary"
+          register={register}
+          name="UserProfilePersonalDetails.UserSummary"
+          error={errors.UserProfilePersonalDetails?.UserSummary?.message}
         />
       </div>
     </div>

@@ -4,6 +4,7 @@ const userProfilePersonalDetails = z.object({
   UserFullName: z.string().min(3),
   UserEmail: z.string().min(6),
   UserPhone: z.string().min(10),
+  UserSummary: z.string().nullable(),
   UserAddress: z.string().nullable(),
   UserLinkedIn: z.string().nullable(),
   UserGitHub: z.string().nullable(),

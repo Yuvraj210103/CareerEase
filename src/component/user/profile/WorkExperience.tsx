@@ -3,9 +3,9 @@ import { toDate } from "../../../utilities/misc";
 import Button from "../../common/button/Button";
 import InputDate from "../../common/inputs/InputDate";
 import InputWithTopHeader from "../../common/inputs/InputWithTopHeader";
-import InputTags from "../../common/inputs/InputTags";
 import { showSnackbar } from "../../../utilities/TsxUtils";
 import { isWorkExpInValid } from "../../../utilities/profileCreateHelper";
+import TextareaWithTopHeader from "../../common/inputs/TextareaWithTopHeader";
 
 export interface UserProfileWorkExperienceChildCollection
   extends Omit<
@@ -38,12 +38,12 @@ const WorkExperience = ({
     setWorkExpDetails([
       ...workExpDetails,
       {
-        UserWorkExpAchievements: [],
+        UserWorkExpDescription: "",
+        UserWorkExpLocation: "",
         UserWorkExpCompanyName: "",
         UserWorkExpStartDate: null as unknown as Date,
         UserWorkExpEndDate: null as unknown as Date,
         UserWorkExpJobTitle: "",
-        UserWorkExpResponsibilities: [],
       },
     ]);
   };
@@ -61,11 +61,6 @@ const WorkExperience = ({
     const updatedCheckpoints = [...workExpDetails];
     if (key === "UserWorkExpStartDate" || key === "UserWorkExpEndDate") {
       updatedCheckpoints[index][key] = (value as Date) || null;
-    } else if (
-      key === "UserWorkExpResponsibilities" ||
-      key === "UserWorkExpAchievements"
-    ) {
-      updatedCheckpoints[index][key] = value as string[];
     } else {
       updatedCheckpoints[index][key] = value as string;
     }
@@ -98,6 +93,15 @@ const WorkExperience = ({
               }
             />
 
+            <InputWithTopHeader
+              className={`mx-0`}
+              label="Location"
+              value={res.UserWorkExpLocation}
+              onChange={(e) =>
+                handleChange(index, "UserWorkExpLocation", e.target.value)
+              }
+            />
+
             <InputDate
               label="Start Date"
               value={
@@ -119,22 +123,14 @@ const WorkExperience = ({
               }
             />
 
-            <InputTags
-              label="Responsibilities"
-              value={res.UserWorkExpResponsibilities}
-              setValue={(e) =>
-                handleChange(
-                  index,
-                  "UserWorkExpResponsibilities",
-                  e as string[]
-                )
-              }
-            />
-            <InputTags
-              label="Achievements"
-              value={res.UserWorkExpAchievements}
-              setValue={(e) =>
-                handleChange(index, "UserWorkExpAchievements", e as string[])
+            <div>&nbsp;</div>
+
+            <TextareaWithTopHeader
+              className={`mx-0`}
+              label="Description"
+              value={res.UserWorkExpDescription}
+              onChange={(e) =>
+                handleChange(index, "UserWorkExpDescription", e.target.value)
               }
             />
 

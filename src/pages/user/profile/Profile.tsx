@@ -48,6 +48,8 @@ const Profile = () => {
           UserProfilePersonalDetails: {
             UserAddress:
               userProfile.UserProfilePersonalDetails.UserAddress || "",
+            UserSummary:
+              userProfile.UserProfilePersonalDetails.UserSummary || "",
             UserDateOfBirth: userProfile.UserProfilePersonalDetails
               .UserDateOfBirth
               ? toDate(userProfile.UserProfilePersonalDetails.UserDateOfBirth)
@@ -86,12 +88,12 @@ const Profile = () => {
     UserProfileWorkExperienceChildCollection[]
   >([
     {
-      UserWorkExpAchievements: [],
+      UserWorkExpDescription: "",
+      UserWorkExpLocation: "",
       UserWorkExpCompanyName: "",
       UserWorkExpStartDate: null as unknown as Date,
       UserWorkExpEndDate: null as unknown as Date,
       UserWorkExpJobTitle: "",
-      UserWorkExpResponsibilities: [],
     },
   ]);
 
