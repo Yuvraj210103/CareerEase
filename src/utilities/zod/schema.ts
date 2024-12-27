@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  IEmploymentType,
+  IExpLevel,
+  IWorkPlaceType,
+} from "../../@types/database";
 
 const userProfilePersonalDetails = z.object({
   UserFullName: z.string().min(3),
@@ -68,4 +73,33 @@ export const userProfileCreateSchema = z.object({
 
 export type UserProfileCreateFormFields = z.infer<
   typeof userProfileCreateSchema
+>;
+
+export const userPreferenceCreateSchema = z.object({
+  PreferenceJobTitles: z.array(z.string()),
+  PreferenceLocations: z.array(z.string()),
+  PreferenceEmploymentType: z.enum([
+    IEmploymentType.fullTime,
+    IEmploymentType.partTime,
+    IEmploymentType.internship,
+    IEmploymentType.contract,
+  ]),
+  PreferenceSalaryRange: z.object({
+    Min: z.coerce.number().optional().nullable(),
+    Max: z.coerce.number().optional().nullable(),
+  }),
+  PreferenceExpLevel: z.enum([
+    IExpLevel.entryLevel,
+    IExpLevel.midLevel,
+    IExpLevel.seniorLevel,
+  ]),
+  PreferenceWorkplaceType: z.enum([
+    IWorkPlaceType.onSite,
+    IWorkPlaceType.remote,
+    IWorkPlaceType.hybrid,
+  ]),
+});
+
+export type UserPreferenceCreateFormFields = z.infer<
+  typeof userPreferenceCreateSchema
 >;

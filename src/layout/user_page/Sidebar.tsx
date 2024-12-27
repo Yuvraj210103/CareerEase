@@ -1,6 +1,6 @@
 import { AppShell } from "@mantine/core";
 import MenuItem from "./MenuItem";
-import { MdOutlinePersonOutline } from "react-icons/md";
+import { MdOutlinePersonOutline, MdRoomPreferences } from "react-icons/md";
 import { TiDocumentText } from "react-icons/ti";
 import { VscGitStashApply } from "react-icons/vsc";
 import { GiConversation } from "react-icons/gi";
@@ -35,6 +35,11 @@ const Sidebar = () => {
           name="Resume Templates"
           icon={<TiDocumentText className="h-6 w-6 " />}
           path={PageRoutes.USER_RESUME_TEMPLATES}
+        />
+        <MenuItem
+          name="Preferences"
+          icon={<MdRoomPreferences className="h-6 w-6 " />}
+          path={PageRoutes.USER_PREFERENCES}
         />
         <MenuItem
           name="Interview Preparation"

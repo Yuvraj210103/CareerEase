@@ -16,6 +16,7 @@ export const PageRoutes = {
   USER_RESUME_TEMPLATES: "/user/resume_template",
   USER_INTERVIEW_PREPARATION: "/user/interview_preparation",
   USER_JOB_APPLICATION: "/user/job_application",
+  USER_PREFERENCES: "/user/preferences",
 };
 
 export const LocalStorageKey = {

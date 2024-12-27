@@ -102,22 +102,38 @@ export interface ISettingsCollection {
   SettingModifiedAt: Timestamp | FieldValue;
 }
 
+export enum IEmploymentType {
+  fullTime = "Full-time",
+  partTime = "Part-time",
+  internship = "Internship",
+  contract = "Contract",
+}
+
+export enum IExpLevel {
+  entryLevel = "Entry-level",
+  midLevel = "Mid-level",
+  seniorLevel = "Senior-level",
+}
+
+export enum IWorkPlaceType {
+  onSite = "On-site",
+  remote = "Remote",
+  hybrid = "Hybrid",
+}
+
 //*User preferences
 export interface IUserPreferencesCollection {
   PreferenceId: string;
+  PreferenceUserId: string;
   PreferenceJobTitles: string[];
   PreferenceLocations: string[];
-  PreferenceEmploymentType:
-    | "Full-time"
-    | "Part-time"
-    | "Internship"
-    | "Contract";
+  PreferenceEmploymentType: IEmploymentType;
   PreferenceSalaryRange: {
-    Min: number;
-    Max: number;
+    Min: number | null;
+    Max: number | null;
   };
-  PreferenceExpLevel: "Entry-level" | "Mid-level" | "Senior-level";
-  PreferenceWorkplaceType: "On-site" | "Remote" | "Hybrid";
+  PreferenceExpLevel: IExpLevel;
+  PreferenceWorkplaceType: IWorkPlaceType;
   PreferenceCreatedAt: Timestamp | FieldValue;
   PreferenceUpdatedAt: Timestamp | FieldValue;
 }

@@ -15,12 +15,18 @@ import DbUser from "../firebase/DB/DbUser";
 import {
   IAuthUsersCollection,
   ISettingsCollection,
+  IUserPreferencesCollection,
   IUserProfilesCollection,
 } from "../@types/database";
 
 const useOnAuthStateChanged = () => {
-  const { setAuthUser, setUserProfile, setLoading, setSettings } =
-    useAuthState();
+  const {
+    setAuthUser,
+    setUserProfile,
+    setUserPreferences,
+    setLoading,
+    setSettings,
+  } = useAuthState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,6 +91,14 @@ const useOnAuthStateChanged = () => {
         const userProfile =
           userProfileSnapshot.docs[0]?.data() as IUserProfilesCollection;
         setUserProfile(userProfile);
+
+        //*fetch user preferences
+        const preferencesSnapshot = await DbUser.getUserPreferences(
+          loggedInUserData.LoggedInUserId
+        );
+        const userPreferences =
+          preferencesSnapshot.docs[0]?.data() as IUserPreferencesCollection;
+        setUserPreferences(userPreferences);
 
         //*fetch user settings
         const settingsSnapshot = await DbUser.getSettings(

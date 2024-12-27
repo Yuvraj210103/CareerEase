@@ -18,6 +18,7 @@ import CustomError from "../../utilities/CustomError";
 import {
   IAuthUsersCollection,
   ISettingsCollection,
+  IUserPreferencesCollection,
   IUserProfileCertificationsDetails,
   IUserProfileCustomSections,
   IUserProfileEducationDetailsChildCollection,
@@ -28,7 +29,10 @@ import {
   IUserProfileWorkExperienceChildCollection,
 } from "../../@types/database";
 import { getNewDocId } from "./utils";
-import { UserProfileCreateFormFields } from "../../utilities/zod/schema";
+import {
+  UserPreferenceCreateFormFields,
+  UserProfileCreateFormFields,
+} from "../../utilities/zod/schema";
 import { UserProfileEducationDetailsChildCollection } from "../../component/user/profile/EducationDetails";
 import { UserProfileWorkExperienceChildCollection } from "../../component/user/profile/WorkExperience";
 import { UserProfileProjectsDetails } from "../../component/user/profile/ProjectDetails";
@@ -385,6 +389,92 @@ class DbUser {
     );
 
     return getDocs(docQuery);
+  };
+
+  static createUserPreferences = (
+    userId: string,
+    data: UserPreferenceCreateFormFields
+  ) => {
+    const preferenceId = getNewDocId(CollectionName.userPreferences);
+    const preferencesRef = doc(
+      db,
+      CollectionName.userPreferences,
+      preferenceId
+    );
+
+    const {
+      PreferenceEmploymentType,
+      PreferenceExpLevel,
+      PreferenceJobTitles,
+      PreferenceLocations,
+      PreferenceSalaryRange,
+      PreferenceWorkplaceType,
+    } = data;
+
+    const newPreferences: IUserPreferencesCollection = {
+      PreferenceId: preferenceId,
+      PreferenceUserId: userId,
+      PreferenceJobTitles,
+      PreferenceLocations,
+      PreferenceEmploymentType,
+      PreferenceSalaryRange: {
+        Min: PreferenceSalaryRange.Min || null,
+        Max: PreferenceSalaryRange.Max || null,
+      },
+      PreferenceExpLevel,
+      PreferenceWorkplaceType,
+      PreferenceCreatedAt: serverTimestamp(),
+      PreferenceUpdatedAt: serverTimestamp(),
+    };
+
+    return setDoc(preferencesRef, newPreferences);
+  };
+
+  static updateUserPreferences = (
+    preferenceId: string,
+    data: UserPreferenceCreateFormFields
+  ) => {
+    const preferencesRef = doc(
+      db,
+      CollectionName.userPreferences,
+      preferenceId
+    );
+
+    const {
+      PreferenceEmploymentType,
+      PreferenceExpLevel,
+      PreferenceJobTitles,
+      PreferenceLocations,
+      PreferenceSalaryRange,
+      PreferenceWorkplaceType,
+    } = data;
+
+    const newPreferences: Partial<IUserPreferencesCollection> = {
+      PreferenceId: preferenceId,
+      PreferenceJobTitles,
+      PreferenceLocations,
+      PreferenceEmploymentType,
+      PreferenceSalaryRange: {
+        Min: PreferenceSalaryRange.Min || null,
+        Max: PreferenceSalaryRange.Max || null,
+      },
+      PreferenceExpLevel,
+      PreferenceWorkplaceType,
+      PreferenceUpdatedAt: serverTimestamp(),
+    };
+
+    return updateDoc(preferencesRef, newPreferences);
+  };
+
+  static getUserPreferences = (userId: string) => {
+    const userPreferencesRef = collection(db, CollectionName.userPreferences);
+    const userPreferencesQuery = query(
+      userPreferencesRef,
+      where("PreferenceUserId", "==", userId),
+      limit(1)
+    );
+
+    return getDocs(userPreferencesQuery);
   };
 }
 
