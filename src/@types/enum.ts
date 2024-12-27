@@ -3,6 +3,7 @@ export enum CollectionName {
   loggedInUsers = "LoggedInUsers",
   userProfiles = "UserProfiles",
   settings = "Settings",
+  userPreferences = "UserPreferences",
 }
 
 export const PageRoutes = {

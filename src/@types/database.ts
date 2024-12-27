@@ -101,3 +101,23 @@ export interface ISettingsCollection {
   SettingCreatedAt: Timestamp | FieldValue;
   SettingModifiedAt: Timestamp | FieldValue;
 }
+
+//*User preferences
+export interface IUserPreferencesCollection {
+  PreferenceId: string;
+  PreferenceJobTitles: string[];
+  PreferenceLocations: string[];
+  PreferenceEmploymentType:
+    | "Full-time"
+    | "Part-time"
+    | "Internship"
+    | "Contract";
+  PreferenceSalaryRange: {
+    Min: number;
+    Max: number;
+  };
+  PreferenceExpLevel: "Entry-level" | "Mid-level" | "Senior-level";
+  PreferenceWorkplaceType: "On-site" | "Remote" | "Hybrid";
+  PreferenceCreatedAt: Timestamp | FieldValue;
+  PreferenceUpdatedAt: Timestamp | FieldValue;
+}
