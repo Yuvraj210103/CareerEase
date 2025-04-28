@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseUrl = import.meta.env.VITE_SERVER_BASE_URL || "http://localhost:3000";
+const baseUrl =
+  import.meta.env.VITE_SERVER_BASE_URL || "http://localhost:3000/api";
 
 export const htmlToPdf = ({
   file_name,
@@ -15,7 +16,7 @@ export const htmlToPdf = ({
   };
 }) => {
   return axios.post(
-    `${baseUrl}/api/html_to_pdf`,
+    `${baseUrl}/html_to_pdf`,
     {
       html,
       file_name,
