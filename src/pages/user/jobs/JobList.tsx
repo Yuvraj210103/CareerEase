@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { scrapInternshalaJobs } from "../../../API/ScrapJobs";
+import { scrapInternshalaJobs, scrapNaukriJobs } from "../../../API/ScrapJobs";
 import PageHeader from "../../../component/common/PageHeader";
 import { IJobs } from "../../../@types/api.response";
 import InternShalaLogo from "../../../../public/assets/job_platforms/internshala.jpeg";
+import NaukriLogo from "../../../../public/assets/job_platforms/naukri.svg";
+
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { MdOutlineCalendarToday, MdOutlineLocationOn } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { Chip } from "@mantine/core";
+import { errorHandler } from "../../../utilities/CustomError";
 
 const JobList = () => {
   const [loading, setLoading] = useState(false);
@@ -15,21 +18,33 @@ const JobList = () => {
 
   const [platforms, setPlatforms] = useState<string[]>(["naukri"]);
 
-  useEffect(() => {
-    setLoading(true);
-    scrapInternshalaJobs()
-      .then((res) => {
-        console.log(res.data.data);
-        setLoading(false);
-        setJobs(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
+  const fetchJobs = async () => {
+    try {
+      console.log("running again");
+      setJobs([]);
+      setLoading(true);
 
-  console.log(platforms, "here");
+      if (platforms.includes("naukri")) {
+        const { data: res } = await scrapNaukriJobs();
+        setJobs((prev) => [...prev, ...res.data]);
+      }
+
+      if (platforms.includes("internshala")) {
+        const { data: res } = await scrapInternshalaJobs();
+        setJobs((prev) => [...prev, ...res.data]);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      errorHandler(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, [platforms]);
 
   return (
     <div className="flex flex-col gap-4 pb-20">
@@ -80,6 +95,10 @@ const JobList = () => {
                 >
                   {res.JobPlatform === "Internshala" && (
                     <img src={InternShalaLogo} className="size-32" />
+                  )}
+
+                  {res.JobPlatform === "Naukri" && (
+                    <img src={NaukriLogo} className="size-32" />
                   )}
                   <div className="flex flex-col">
                     <div className="font-semibold text-lg text-textSecondary line-clamp-1">
