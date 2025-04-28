@@ -15,7 +15,7 @@ export const PageRoutes = {
   USER_PROFILE: "/user/profile",
   USER_RESUME_TEMPLATES: "/user/resume_template",
   USER_INTERVIEW_PREPARATION: "/user/interview_preparation",
-  USER_JOB_APPLICATION: "/user/job_application",
+  USER_JOBS: "/user/jobs",
   USER_PREFERENCES: "/user/preferences",
 };
 

@@ -3,7 +3,7 @@ import MenuItem from "./MenuItem";
 import { MdOutlinePersonOutline, MdRoomPreferences } from "react-icons/md";
 import { TiDocumentText } from "react-icons/ti";
 import { VscGitStashApply } from "react-icons/vsc";
-import { GiConversation } from "react-icons/gi";
+//import { GiConversation } from "react-icons/gi";
 import { PageRoutes } from "../../@types/enum";
 import { useAuthState } from "../../store";
 
@@ -41,15 +41,15 @@ const Sidebar = () => {
           icon={<MdRoomPreferences className="h-6 w-6 " />}
           path={PageRoutes.USER_PREFERENCES}
         />
-        <MenuItem
+        {/* <MenuItem
           name="Interview Preparation"
           icon={<GiConversation className="h-6 w-6 " />}
           path={PageRoutes.USER_INTERVIEW_PREPARATION}
-        />
+        /> */}
         <MenuItem
-          name="Job Applications"
+          name="Jobs For Me"
           icon={<VscGitStashApply className="h-6 w-6 " />}
-          path={PageRoutes.USER_JOB_APPLICATION}
+          path={PageRoutes.USER_JOBS}
         />
       </div>
     </AppShell.Navbar>

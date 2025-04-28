@@ -23,6 +23,7 @@ import Profile from "./pages/user/profile/Profile";
 import { useShowLoader } from "./hooks/useShowLoader";
 import ResumeTemplates from "./pages/user/resume_templates/ResumeTemplates";
 import Preferences from "./pages/user/preferences/Preferences";
+import JobList from "./pages/user/jobs/JobList";
 
 function App() {
   const { authUser, loading } = useAuthState();
@@ -56,6 +57,8 @@ function App() {
                 path={PageRoutes.USER_RESUME_TEMPLATES}
                 Component={ResumeTemplates}
               />
+
+              <Route path={PageRoutes.USER_JOBS} Component={JobList} />
             </Routes>
           </UserPageLayout>
         </ModalsProvider>

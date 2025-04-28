@@ -24,7 +24,9 @@ const UserPageLayout = ({ children }: UserPageLayoutProps) => {
       <Sidebar />
 
       <AppShell.Main bg={"#f7f7f7"}>
-        <div className="flex flex-col w-full h-full pl-4 py-4">{children}</div>
+        <div className="flex flex-col w-full h-full pl-4 py-4 overflow-x-hidden">
+          {children}
+        </div>
       </AppShell.Main>
     </AppShell>
   );
