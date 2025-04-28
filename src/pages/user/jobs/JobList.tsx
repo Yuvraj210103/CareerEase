@@ -87,7 +87,11 @@ const JobList = () => {
   };
 
   useEffect(() => {
-    fetchJobs();
+    if (platforms.length === 0) {
+      setJobs([]);
+    } else {
+      fetchJobs();
+    }
   }, [platforms]);
 
   return (
