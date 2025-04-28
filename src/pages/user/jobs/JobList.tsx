@@ -10,6 +10,7 @@ import { MdOutlineCalendarToday, MdOutlineLocationOn } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { Chip } from "@mantine/core";
 import { errorHandler } from "../../../utilities/CustomError";
+import { useAuthState } from "../../../store";
 
 const JobList = () => {
   const [loading, setLoading] = useState(false);
@@ -18,19 +19,62 @@ const JobList = () => {
 
   const [platforms, setPlatforms] = useState<string[]>(["naukri"]);
 
+  const { userPreferences } = useAuthState();
+
   const fetchJobs = async () => {
     try {
-      console.log("running again");
       setJobs([]);
       setLoading(true);
 
       if (platforms.includes("naukri")) {
-        const { data: res } = await scrapNaukriJobs();
+        let filter = "jobs-in-india";
+        const params = [];
+
+        if (userPreferences?.PreferenceLocations?.length) {
+          filter = `jobs-in-${userPreferences?.PreferenceLocations[0]}`;
+        }
+
+        if (userPreferences?.PreferenceWorkplaceType == "On-site") {
+          params.push("wfhType=0");
+        } else if (userPreferences?.PreferenceWorkplaceType == "Remote") {
+          params.push("wfhType=2");
+        } else if (userPreferences?.PreferenceWorkplaceType == "Hybrid") {
+          params.push("wfhType=3");
+        }
+
+        if (userPreferences?.PreferenceJobTitles?.length) {
+          params.push(`k=${userPreferences?.PreferenceJobTitles[0]}`);
+        }
+
+        let finalFilter = filter;
+        if (params.length) {
+          finalFilter = `${filter}?${params.join("&")}`;
+        }
+        console.log(encodeURIComponent(finalFilter), "naukri filter");
+        const { data: res } = await scrapNaukriJobs(
+          encodeURIComponent(finalFilter)
+        );
         setJobs((prev) => [...prev, ...res.data]);
       }
 
       if (platforms.includes("internshala")) {
-        const { data: res } = await scrapInternshalaJobs();
+        let filter = ""; // Default filter
+
+        // On-site internships
+        if (userPreferences?.PreferenceWorkplaceType === "Remote") {
+          if (userPreferences?.PreferenceJobTitles?.length) {
+            filter += `/work-from-home-${userPreferences?.PreferenceJobTitles[0]}-internships`;
+          } else {
+            filter += `/work-from-home-internships/`;
+          }
+        }
+
+        // Title - Web Development
+
+        console.log(filter, "internshala filter");
+        const { data: res } = await scrapInternshalaJobs(
+          encodeURIComponent(filter)
+        );
         setJobs((prev) => [...prev, ...res.data]);
       }
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3000/api";
+const baseUrl =
+  import.meta.env.VITE_OWN_SERVER_BASE_URL || "http://localhost:3000/api";
 
 export const scrapInternshalaJobs = (filter?: string) => {
   return axios.get(`${baseUrl}/scrap/internshala?filter=${filter}`);
