@@ -11,6 +11,10 @@ import { BsCash } from "react-icons/bs";
 import { Chip } from "@mantine/core";
 import { errorHandler } from "../../../utilities/CustomError";
 import { useAuthState } from "../../../store";
+import {
+  getInternshalaFilters,
+  getNaukriFilters,
+} from "../../../utilities/misc";
 
 const JobList = () => {
   const [loading, setLoading] = useState(false);
@@ -27,53 +31,15 @@ const JobList = () => {
       setLoading(true);
 
       if (platforms.includes("naukri")) {
-        let filter = "jobs-in-india";
-        const params = [];
-
-        if (userPreferences?.PreferenceLocations?.length) {
-          filter = `jobs-in-${userPreferences?.PreferenceLocations[0]}`;
-        }
-
-        if (userPreferences?.PreferenceWorkplaceType == "On-site") {
-          params.push("wfhType=0");
-        } else if (userPreferences?.PreferenceWorkplaceType == "Remote") {
-          params.push("wfhType=2");
-        } else if (userPreferences?.PreferenceWorkplaceType == "Hybrid") {
-          params.push("wfhType=3");
-        }
-
-        if (userPreferences?.PreferenceJobTitles?.length) {
-          params.push(`k=${userPreferences?.PreferenceJobTitles[0]}`);
-        }
-
-        let finalFilter = filter;
-        if (params.length) {
-          finalFilter = `${filter}?${params.join("&")}`;
-        }
-        console.log(encodeURIComponent(finalFilter), "naukri filter");
         const { data: res } = await scrapNaukriJobs(
-          encodeURIComponent(finalFilter)
+          getNaukriFilters(userPreferences)
         );
         setJobs((prev) => [...prev, ...res.data]);
       }
 
       if (platforms.includes("internshala")) {
-        let filter = ""; // Default filter
-
-        // On-site internships
-        if (userPreferences?.PreferenceWorkplaceType === "Remote") {
-          if (userPreferences?.PreferenceJobTitles?.length) {
-            filter += `/work-from-home-${userPreferences?.PreferenceJobTitles[0]}-internships`;
-          } else {
-            filter += `/work-from-home-internships/`;
-          }
-        }
-
-        // Title - Web Development
-
-        console.log(filter, "internshala filter");
         const { data: res } = await scrapInternshalaJobs(
-          encodeURIComponent(filter)
+          getInternshalaFilters(userPreferences)
         );
         setJobs((prev) => [...prev, ...res.data]);
       }
@@ -139,7 +105,7 @@ const JobList = () => {
                 <a
                   href={res.JobUrl}
                   target="_blank"
-                  className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500"
+                  className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 justify-start items-start"
                 >
                   {res.JobPlatform === "Internshala" && (
                     <img src={InternShalaLogo} className="size-32" />
@@ -152,6 +118,11 @@ const JobList = () => {
                     <div className="font-semibold text-lg text-textSecondary line-clamp-1">
                       {res.JobTitle}
                     </div>
+                    {res.JobDescription && (
+                      <div className="text-textTertiary flex items-center gap-2 line-clamp-2">
+                        {res.JobDescription}
+                      </div>
+                    )}
                     <div className="flex items-center gap-4 mt-2">
                       {res.JobCompany && (
                         <div className="text-textTertiary flex items-center gap-2">

@@ -1,5 +1,6 @@
 export interface IJobs {
   JobTitle: string;
+  JobDescription?: string;
   JobCompany: string;
   JobLocation: string;
   JobDuration: string;
@@ -7,5 +8,6 @@ export interface IJobs {
   JobStatus: "Open" | "Closed";
   JobUrl: string;
   JobPlatform: "Internshala" | "Naukri";
+  JobPostedAt?: string;
   JobScrapedAt: Date;
 }
