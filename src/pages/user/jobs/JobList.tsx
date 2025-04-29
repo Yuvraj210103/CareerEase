@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   scrapInternshalaJobs,
   scrapNaukriJobs,
@@ -33,10 +33,12 @@ const JobList = () => {
   const { userPreferences } = useAuthState();
 
   const fetchNaukriJobs = async () => {
-    if (
-      !platforms.includes("naukri") ||
-      jobs.some((job) => job.JobPlatform === "Naukri")
-    ) {
+    if (!platforms.includes("naukri")) {
+      setJobs((prev) => prev.filter((j) => j.JobPlatform !== "Naukri"));
+      return;
+    }
+
+    if (jobs.some((job) => job.JobPlatform === "Naukri")) {
       return;
     }
     try {
@@ -51,10 +53,12 @@ const JobList = () => {
   };
 
   const fetchShineJobs = async () => {
-    if (
-      !platforms.includes("shine") ||
-      jobs.some((job) => job.JobPlatform === "Shine")
-    ) {
+    if (!platforms.includes("shine")) {
+      setJobs((prev) => prev.filter((j) => j.JobPlatform !== "Shine"));
+      return;
+    }
+
+    if (jobs.some((job) => job.JobPlatform === "Shine")) {
       return;
     }
     try {
@@ -69,10 +73,12 @@ const JobList = () => {
   };
 
   const fetchInternshalaJobs = async () => {
-    if (
-      !platforms.includes("internshala") ||
-      jobs.some((job) => job.JobPlatform === "Internshala")
-    ) {
+    if (!platforms.includes("internshala")) {
+      setJobs((prev) => prev.filter((j) => j.JobPlatform !== "Internshala"));
+      return;
+    }
+
+    if (jobs.some((job) => job.JobPlatform === "Internshala")) {
       return;
     }
     try {
@@ -86,9 +92,15 @@ const JobList = () => {
     }
   };
 
+  const hasRunRef = useRef(false);
   useEffect(() => {
     const fetchJobs = async () => {
+      if (hasRunRef.current) return;
+
       setLoading(true);
+      hasRunRef.current = true;
+
+      console.log("running ");
 
       const naukriTask = fetchNaukriJobs();
       const shineTask = fetchShineJobs();
@@ -97,9 +109,21 @@ const JobList = () => {
       await Promise.all([naukriTask, shineTask, internshalaTask]);
 
       setLoading(false);
+      hasRunRef.current = false;
     };
     fetchJobs();
   }, [platforms]);
+
+  const targetDivToBeScrolled = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (loading && jobs.length > 0 && targetDivToBeScrolled.current) {
+      targetDivToBeScrolled.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [loading, jobs, platforms]);
 
   return (
     <div className="flex flex-col gap-4 pb-20">
@@ -148,7 +172,7 @@ const JobList = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {loading
+        {loading && jobs.length === 0
           ? Array.from({ length: 20 }).map(() => {
               return (
                 <div className="bg-shimmerColor shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 animate-pulse h-32">
@@ -156,66 +180,85 @@ const JobList = () => {
                 </div>
               );
             })
-          : jobs.map((res) => {
-              return (
-                <a
-                  href={res.JobUrl}
-                  target="_blank"
-                  className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 justify-start items-start"
-                >
-                  {res.JobPlatform === "Internshala" && (
-                    <img src={InternShalaLogo} className="size-32" />
-                  )}
-
-                  {res.JobPlatform === "Naukri" && (
-                    <img src={NaukriLogo} className="size-32" />
-                  )}
-
-                  {res.JobPlatform === "Shine" && (
-                    <img src={ShineLogo} className="size-32" />
-                  )}
-                  <div className="flex flex-col">
-                    <div className="font-semibold text-lg text-textSecondary line-clamp-1">
-                      {res.JobTitle}
-                    </div>
-                    {res.JobDescription && (
-                      <div className="text-textTertiary flex items-center gap-2 line-clamp-2">
-                        {res.JobDescription}
-                      </div>
+          : jobs
+              .filter((j) => !platforms.includes(j.JobPlatform))
+              .map((res) => {
+                return (
+                  <a
+                    href={res.JobUrl}
+                    target="_blank"
+                    className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 justify-start items-start"
+                  >
+                    {res.JobPlatform === "Internshala" && (
+                      <img src={InternShalaLogo} className="size-32" />
                     )}
-                    <div className="flex items-center gap-4 mt-2">
-                      {res.JobCompany && (
-                        <div className="text-textTertiary flex items-center gap-2">
-                          <HiOutlineBuildingOffice2 />
-                          <span className="line-clamp-1">{res.JobCompany}</span>
+
+                    {res.JobPlatform === "Naukri" && (
+                      <img src={NaukriLogo} className="size-32" />
+                    )}
+
+                    {res.JobPlatform === "Shine" && (
+                      <img src={ShineLogo} className="size-32" />
+                    )}
+                    <div className="flex flex-col">
+                      <div className="font-semibold text-lg text-textSecondary line-clamp-1">
+                        {res.JobTitle}
+                      </div>
+                      {res.JobDescription && (
+                        <div className="text-textTertiary flex items-center gap-2 line-clamp-2">
+                          {res.JobDescription}
                         </div>
                       )}
-                      {res.JobLocation && (
+                      <div className="flex items-center gap-4 mt-2">
+                        {res.JobCompany && (
+                          <div className="text-textTertiary flex items-center gap-2">
+                            <HiOutlineBuildingOffice2 />
+                            <span className="line-clamp-1">
+                              {res.JobCompany}
+                            </span>
+                          </div>
+                        )}
+                        {res.JobLocation && (
+                          <div className="text-textTertiary flex items-center gap-2">
+                            <MdOutlineLocationOn />
+                            <span className="line-clamp-1">
+                              {res.JobLocation}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {res.JobDuration && (
                         <div className="text-textTertiary flex items-center gap-2">
-                          <MdOutlineLocationOn />
+                          <MdOutlineCalendarToday />
                           <span className="line-clamp-1">
-                            {res.JobLocation}
+                            {res.JobDuration}
                           </span>
                         </div>
                       )}
+                      {res.JobSalary && (
+                        <div className="text-textTertiary flex items-center gap-2">
+                          <BsCash />
+                          <span className="line-clamp-1">{res.JobSalary}</span>
+                        </div>
+                      )}
                     </div>
+                  </a>
+                );
+              })}
 
-                    {res.JobDuration && (
-                      <div className="text-textTertiary flex items-center gap-2">
-                        <MdOutlineCalendarToday />
-                        <span className="line-clamp-1">{res.JobDuration}</span>
-                      </div>
-                    )}
-                    {res.JobSalary && (
-                      <div className="text-textTertiary flex items-center gap-2">
-                        <BsCash />
-                        <span className="line-clamp-1">{res.JobSalary}</span>
-                      </div>
-                    )}
-                  </div>
-                </a>
-              );
-            })}
+        {loading &&
+          jobs.length > 0 &&
+          Array.from({ length: 19 }).map((_, idx) => {
+            return (
+              <div
+                ref={idx === 0 ? targetDivToBeScrolled : null}
+                className="bg-shimmerColor shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 animate-pulse h-32"
+              >
+                &nbsp;
+              </div>
+            );
+          })}
       </div>
     </div>
   );
