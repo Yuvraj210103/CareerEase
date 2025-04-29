@@ -10,3 +10,7 @@ export const scrapInternshalaJobs = (filter?: string) => {
 export const scrapNaukriJobs = (filter?: string) => {
   return axios.get(`${baseUrl}/scrap/naukri?filter=${filter}`);
 };
+
+export const scrapShineJobs = (filter?: string) => {
+  return axios.get(`${baseUrl}/scrap/shine?filter=${filter}`);
+};

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from "dayjs";
 import { FieldValue, GeoPoint, Timestamp } from "firebase/firestore";
+import { IUserPreferencesCollection } from "../@types/database";
 
 export const fullTextSearchIndex = (text: string): string[] => {
   const textList: string[] = [];
@@ -293,3 +294,78 @@ export function getMatchingRange(date: Date, ranges: string[]): string | null {
 
   return null; // Return null if no range matches
 }
+
+export const getNaukriFilters = (
+  userPreferences: IUserPreferencesCollection | null
+) => {
+  let filter = "jobs-in-india";
+  const params = [];
+
+  if (userPreferences?.PreferenceLocations?.length) {
+    filter = `jobs-in-${userPreferences?.PreferenceLocations[0]}`;
+  }
+
+  if (userPreferences?.PreferenceWorkplaceType == "On-site") {
+    params.push("wfhType=0");
+  } else if (userPreferences?.PreferenceWorkplaceType == "Remote") {
+    params.push("wfhType=2");
+  } else if (userPreferences?.PreferenceWorkplaceType == "Hybrid") {
+    params.push("wfhType=3");
+  }
+
+  if (userPreferences?.PreferenceJobTitles?.length) {
+    params.push(`k=${userPreferences?.PreferenceJobTitles[0]}`);
+  }
+
+  let finalFilter = filter;
+  if (params.length) {
+    finalFilter = `${filter}?${params.join("&")}`;
+  }
+  return encodeURIComponent(finalFilter);
+};
+
+export const getInternshalaFilters = (
+  userPreferences: IUserPreferencesCollection | null
+) => {
+  let filter = ""; // Default filter
+
+  // On-site internships
+  if (userPreferences?.PreferenceWorkplaceType === "Remote") {
+    if (userPreferences?.PreferenceJobTitles?.length) {
+      filter += `/work-from-home-${userPreferences?.PreferenceJobTitles[0]}-internships`;
+    } else {
+      filter += `/work-from-home-internships/`;
+    }
+  }
+
+  return encodeURIComponent(filter);
+};
+
+export const getShineFilters = (
+  userPreferences: IUserPreferencesCollection | null
+): string => {
+  let filter = "job-search"; // Base path
+
+  // Job Title
+  if (userPreferences?.PreferenceJobTitles?.length) {
+    const jobTitle = userPreferences.PreferenceJobTitles[0]
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    filter += `/${jobTitle}`;
+  }
+
+  // Location
+  if (userPreferences?.PreferenceLocations?.length) {
+    const location = userPreferences.PreferenceLocations[0]
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    filter += `-jobs-in-${location}`;
+  }
+
+  // Workplace Type
+  if (userPreferences?.PreferenceWorkplaceType === "Remote") {
+    filter += "-work-from-home";
+  }
+
+  return encodeURIComponent(filter);
+};
