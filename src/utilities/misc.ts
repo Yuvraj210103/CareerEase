@@ -340,3 +340,32 @@ export const getInternshalaFilters = (
 
   return encodeURIComponent(filter);
 };
+
+export const getShineFilters = (
+  userPreferences: IUserPreferencesCollection | null
+): string => {
+  let filter = "job-search"; // Base path
+
+  // Job Title
+  if (userPreferences?.PreferenceJobTitles?.length) {
+    const jobTitle = userPreferences.PreferenceJobTitles[0]
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    filter += `/${jobTitle}`;
+  }
+
+  // Location
+  if (userPreferences?.PreferenceLocations?.length) {
+    const location = userPreferences.PreferenceLocations[0]
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    filter += `-jobs-in-${location}`;
+  }
+
+  // Workplace Type
+  if (userPreferences?.PreferenceWorkplaceType === "Remote") {
+    filter += "-work-from-home";
+  }
+
+  return encodeURIComponent(filter);
+};

@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { scrapInternshalaJobs, scrapNaukriJobs } from "../../../API/ScrapJobs";
+import {
+  scrapInternshalaJobs,
+  scrapNaukriJobs,
+  scrapShineJobs,
+} from "../../../API/ScrapJobs";
 import PageHeader from "../../../component/common/PageHeader";
 import { IJobs } from "../../../@types/api.response";
+
 import InternShalaLogo from "../../../../public/assets/job_platforms/internshala.jpeg";
 import NaukriLogo from "../../../../public/assets/job_platforms/naukri.svg";
+import ShineLogo from "../../../../public/assets/job_platforms/shine.svg";
 
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { MdOutlineCalendarToday, MdOutlineLocationOn } from "react-icons/md";
@@ -14,6 +20,7 @@ import { useAuthState } from "../../../store";
 import {
   getInternshalaFilters,
   getNaukriFilters,
+  getShineFilters,
 } from "../../../utilities/misc";
 
 const JobList = () => {
@@ -25,39 +32,73 @@ const JobList = () => {
 
   const { userPreferences } = useAuthState();
 
-  const fetchJobs = async () => {
+  const fetchNaukriJobs = async () => {
+    if (
+      !platforms.includes("naukri") ||
+      jobs.some((job) => job.JobPlatform === "Naukri")
+    ) {
+      return;
+    }
     try {
-      setJobs([]);
-      setLoading(true);
-
-      if (platforms.includes("naukri")) {
-        const { data: res } = await scrapNaukriJobs(
-          getNaukriFilters(userPreferences)
-        );
-        setJobs((prev) => [...prev, ...res.data]);
-      }
-
-      if (platforms.includes("internshala")) {
-        const { data: res } = await scrapInternshalaJobs(
-          getInternshalaFilters(userPreferences)
-        );
-        setJobs((prev) => [...prev, ...res.data]);
-      }
-
-      setLoading(false);
+      const { data: res } = await scrapNaukriJobs(
+        getNaukriFilters(userPreferences)
+      );
+      setJobs((prev) => [...prev, ...res.data]);
     } catch (error) {
       console.log(error);
       errorHandler(error);
-      setLoading(false);
+    }
+  };
+
+  const fetchShineJobs = async () => {
+    if (
+      !platforms.includes("shine") ||
+      jobs.some((job) => job.JobPlatform === "Shine")
+    ) {
+      return;
+    }
+    try {
+      const { data: res } = await scrapShineJobs(
+        getShineFilters(userPreferences)
+      );
+      setJobs((prev) => [...prev, ...res.data]);
+    } catch (error) {
+      console.log(error);
+      errorHandler(error);
+    }
+  };
+
+  const fetchInternshalaJobs = async () => {
+    if (
+      !platforms.includes("internshala") ||
+      jobs.some((job) => job.JobPlatform === "Internshala")
+    ) {
+      return;
+    }
+    try {
+      const { data: res } = await scrapInternshalaJobs(
+        getInternshalaFilters(userPreferences)
+      );
+      setJobs((prev) => [...prev, ...res.data]);
+    } catch (error) {
+      console.log(error);
+      errorHandler(error);
     }
   };
 
   useEffect(() => {
-    if (platforms.length === 0) {
-      setJobs([]);
-    } else {
-      fetchJobs();
-    }
+    const fetchJobs = async () => {
+      setLoading(true);
+
+      const naukriTask = fetchNaukriJobs();
+      const shineTask = fetchShineJobs();
+      const internshalaTask = fetchInternshalaJobs();
+
+      await Promise.all([naukriTask, shineTask, internshalaTask]);
+
+      setLoading(false);
+    };
+    fetchJobs();
   }, [platforms]);
 
   return (
@@ -66,18 +107,7 @@ const JobList = () => {
 
       <div className="flex gap-4 bg-surface shadow p-4 rounded">
         <Chip
-          onClick={() =>
-            setPlatforms((prev) =>
-              prev.includes("internshala")
-                ? prev.filter((p) => p != "internshala")
-                : [...prev, "internshala"]
-            )
-          }
-          checked={platforms.includes("internshala")}
-        >
-          Internshala
-        </Chip>
-        <Chip
+          disabled={loading}
           onClick={() =>
             setPlatforms((prev) =>
               prev.includes("naukri")
@@ -88,6 +118,32 @@ const JobList = () => {
           checked={platforms.includes("naukri")}
         >
           Naukri
+        </Chip>
+        <Chip
+          disabled={loading}
+          onClick={() =>
+            setPlatforms((prev) =>
+              prev.includes("shine")
+                ? prev.filter((p) => p != "shine")
+                : [...prev, "shine"]
+            )
+          }
+          checked={platforms.includes("shine")}
+        >
+          Shine
+        </Chip>
+        <Chip
+          disabled={loading}
+          onClick={() =>
+            setPlatforms((prev) =>
+              prev.includes("internshala")
+                ? prev.filter((p) => p != "internshala")
+                : [...prev, "internshala"]
+            )
+          }
+          checked={platforms.includes("internshala")}
+        >
+          Internshala
         </Chip>
       </div>
 
@@ -113,6 +169,10 @@ const JobList = () => {
 
                   {res.JobPlatform === "Naukri" && (
                     <img src={NaukriLogo} className="size-32" />
+                  )}
+
+                  {res.JobPlatform === "Shine" && (
+                    <img src={ShineLogo} className="size-32" />
                   )}
                   <div className="flex flex-col">
                     <div className="font-semibold text-lg text-textSecondary line-clamp-1">
