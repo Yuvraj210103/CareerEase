@@ -22,6 +22,8 @@ import {
   getNaukriFilters,
   getShineFilters,
 } from "../../../utilities/misc";
+import MatchResultModal from "../../../component/user/job/modal/MatchResultModal";
+import Button from "../../../component/common/button/Button";
 
 const JobList = () => {
   const [loading, setLoading] = useState(false);
@@ -100,8 +102,6 @@ const JobList = () => {
       setLoading(true);
       hasRunRef.current = true;
 
-      console.log("running ");
-
       const naukriTask = fetchNaukriJobs();
       const shineTask = fetchShineJobs();
       const internshalaTask = fetchInternshalaJobs();
@@ -124,6 +124,10 @@ const JobList = () => {
       });
     }
   }, [loading, jobs, platforms]);
+
+  const [matchResultModal, setMatchResultModal] = useState(false);
+
+  const [selectedJob, setSelectedJob] = useState<IJobs | null>(null);
 
   return (
     <div className="flex flex-col gap-4 pb-20">
@@ -184,22 +188,20 @@ const JobList = () => {
               .filter((j) => !platforms.includes(j.JobPlatform))
               .map((res) => {
                 return (
-                  <a
-                    href={res.JobUrl}
-                    target="_blank"
-                    className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 justify-start items-start"
-                  >
-                    {res.JobPlatform === "Internshala" && (
-                      <img src={InternShalaLogo} className="size-32" />
-                    )}
+                  <div className="bg-surface shadow rounded p-4 flex gap-4 cursor-pointer hover:scale-[1.01] duration-500 justify-start items-start">
+                    <a className="min-w-32" href={res.JobUrl} target="_blank">
+                      {res.JobPlatform === "Internshala" && (
+                        <img src={InternShalaLogo} className="size-32" />
+                      )}
 
-                    {res.JobPlatform === "Naukri" && (
-                      <img src={NaukriLogo} className="size-32" />
-                    )}
+                      {res.JobPlatform === "Naukri" && (
+                        <img src={NaukriLogo} className="size-32" />
+                      )}
 
-                    {res.JobPlatform === "Shine" && (
-                      <img src={ShineLogo} className="size-32" />
-                    )}
+                      {res.JobPlatform === "Shine" && (
+                        <img src={ShineLogo} className="size-32" />
+                      )}
+                    </a>
                     <div className="flex flex-col">
                       <div className="font-semibold text-lg text-textSecondary line-clamp-1">
                         {res.JobTitle}
@@ -242,8 +244,17 @@ const JobList = () => {
                           <span className="line-clamp-1">{res.JobSalary}</span>
                         </div>
                       )}
+
+                      <Button
+                        label="Match Result"
+                        onClick={() => {
+                          setSelectedJob(res);
+                          setMatchResultModal(true);
+                        }}
+                        type="black"
+                      />
                     </div>
-                  </a>
+                  </div>
                 );
               })}
 
@@ -260,6 +271,12 @@ const JobList = () => {
             );
           })}
       </div>
+
+      <MatchResultModal
+        opened={matchResultModal}
+        setOpened={setMatchResultModal}
+        job={selectedJob}
+      />
     </div>
   );
 };
