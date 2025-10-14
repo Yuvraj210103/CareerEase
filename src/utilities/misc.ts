@@ -65,6 +65,7 @@ export const firebaseDataToObject = (docData: Record<string, unknown>) => {
 };
 
 export const toDate = (value: any): Date => {
+  console.log(value);
   if (value instanceof Date) {
     return value;
   } else if (value instanceof Timestamp) {
@@ -72,7 +73,8 @@ export const toDate = (value: any): Date => {
   } else if (typeof value === "string" || typeof value === "number") {
     return new Date(value);
   } else {
-    throw new TypeError("Invalid date value");
+    return new Date() as Date;
+    //throw new TypeError("Invalid date value");
   }
 };
 
